@@ -1,5 +1,5 @@
 const STORAGE_KEY = "caffTrackData";
-const APP_VERSION = "1.3.1 Beta";
+const APP_VERSION = "1.3.2 Beta";
 const MAX_CAFFEINE_PER_DRINK = 999;
 
 let data = loadData();
