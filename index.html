@@ -12,7 +12,7 @@
     <meta name="apple-mobile-web-app-title" content="CaffTrack">
 
     <link rel="manifest" href="manifest.json">
-<link rel="stylesheet" href="style.css?v=1.3.2-fix3">
+<link rel="stylesheet" href="style.css?v=1.3.3">
 </head>
 
 <body>
@@ -425,42 +425,40 @@
 
 
     <!-- PAST DATE LOGGING -->
-    <div class="past-log-button">
+<div class="past-log-button">
 
-        <span class="past-log-icon">
-            📅
-        </span>
+    <span class="past-log-icon">📅</span>
 
-        <span class="past-log-text">
+    <span class="past-log-text">
+        <strong>Forgot to log something?</strong>
+        <small>Choose a date below</small>
+    </span>
 
-            <strong>
-                Forgot to log something?
-            </strong>
+    <div class="past-date-row">
 
-            <small>
-                Choose a date below
-            </small>
+        <label for="pastDrinkDate" class="past-date-label">
+            <span>📅 Select a date</span>
+            <span class="past-date-hint">Tap to choose ↓</span>
+        </label>
 
-        </span>
+        <input
+            id="pastDrinkDate"
+            class="past-date-picker"
+            type="date"
+            aria-label="Select a date to log caffeine"
+        >
 
- <div class="past-date-row">
-    <input
-        id="pastDrinkDate"
-        class="past-date-picker"
-        type="date"
-        aria-label="Choose a date to log caffeine"
-    >
-
-    <button
-        type="button"
-        class="past-date-button"
-        onclick="pastDateSelected()"
-    >
-        Log
-    </button>
-</div>
+        <button
+            type="button"
+            class="past-date-button"
+            onclick="pastDateSelected()"
+        >
+            Log
+        </button>
 
     </div>
+
+</div>
 
 <!-- DAY OF WEEK INSIGHTS -->
 <section class="section">
@@ -1142,7 +1140,7 @@
 
 
     <div class="app-version">
-        CaffTrack · v1.3.2 Beta
+        CaffTrack · v1.3.3 Beta
     </div>
 
 </main>
@@ -1774,7 +1772,7 @@
 </div>
 
 
-<script src="script.js?v=1.3.2-fix3"></script>
+<script src="script.js?v=1.3.3"></script>
 
 <!-- EDIT HISTORY DRINK MODAL -->
 <div id="editDrinkOverlay" class="edit-drink-overlay hidden">

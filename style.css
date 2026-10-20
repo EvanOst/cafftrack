@@ -3255,3 +3255,71 @@ body.editing-drink {
     font-weight: 700;
     cursor: pointer;
 }
+/* PAST DATE PICKER — MOBILE FIX */
+
+.past-log-button {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+}
+
+.past-log-button .past-date-row {
+    box-sizing: border-box;
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+.past-log-button .past-date-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    width: 100%;
+    font-size: 14px;
+    font-weight: 700;
+    color: inherit;
+    cursor: pointer;
+}
+
+.past-log-button .past-date-hint {
+    font-size: 12px;
+    font-weight: 400;
+    opacity: 0.7;
+}
+
+.past-log-button #pastDrinkDate {
+    box-sizing: border-box;
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    min-height: 52px;
+    margin: 0;
+    padding: 12px 14px;
+    border: 1px solid #4b5c70;
+    border-radius: 12px;
+    background: #171c23;
+    color: #ffffff;
+    -webkit-text-fill-color: #ffffff;
+    font-family: inherit;
+    font-size: 16px;
+    color-scheme: dark;
+}
+
+.past-log-button .past-date-button {
+    box-sizing: border-box;
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    min-height: 50px;
+    margin: 0;
+    padding: 12px;
+    border-radius: 12px;
+}
