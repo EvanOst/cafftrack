@@ -1,5 +1,5 @@
 const STORAGE_KEY = "caffTrackData";
-const APP_VERSION = "1.3.3 Beta";
+const APP_VERSION = "1.3.4 Beta";
 const MAX_CAFFEINE_PER_DRINK = 999;
 
 let data = loadData();
@@ -557,7 +557,13 @@ function preparePastDatePicker() {
     const input = document.getElementById("pastDrinkDate");
     if (!input) return;
 
-    input.max = dateKey(new Date());
+    const today = dateKey(new Date());
+
+    input.max = today;
+
+    if (!input.value) {
+        input.value = today;
+    }
 }
 
 
@@ -579,8 +585,8 @@ function pastDateSelected() {
         return;
     }
 
-    openLogger(selectedDate);
-    input.value = "";
+  openLogger(selectedDate);
+input.value = dateKey(new Date());
 }
 
 /* =========================

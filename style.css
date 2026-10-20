@@ -3323,3 +3323,7 @@ body.editing-drink {
     padding: 12px;
     border-radius: 12px;
 }
+/* v1.3.4 — Fix iPhone date picker overflow */
+.past-log-button #pastDrinkDate {
+    width: calc(100% - 30px);
+}
