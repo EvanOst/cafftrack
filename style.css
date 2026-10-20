@@ -3199,3 +3199,59 @@ body.editing-drink {
     line-height: 1.5;
     opacity: 0.7;
 }
+/* ==========================================
+   PAST DATE CALENDAR FIX
+   ========================================== */
+
+.past-log-button .past-date-row {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.past-log-button .past-date-picker {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    min-height: 54px;
+    padding: 14px 16px;
+
+    background: #171c23;
+    color: #f5f5f5;
+    -webkit-text-fill-color: #f5f5f5;
+
+    border: 1px solid #3b4652;
+    border-radius: 14px;
+
+    font-family: inherit;
+    font-size: 16px;
+    color-scheme: dark;
+    appearance: auto;
+    -webkit-appearance: auto;
+}
+
+.past-log-button .past-date-picker::-webkit-calendar-picker-indicator {
+    opacity: 1;
+    cursor: pointer;
+}
+
+.past-log-button .past-date-button {
+    display: block;
+    width: 100%;
+    min-height: 54px;
+    margin: 0;
+    padding: 14px;
+
+    border: none;
+    border-radius: 14px;
+    background: #4c729f;
+    color: #ffffff;
+
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+}
