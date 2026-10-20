@@ -1,5 +1,5 @@
 const STORAGE_KEY = "caffTrackData";
-const APP_VERSION = "1.3.0";
+const APP_VERSION = "1.3.1 Beta";
 const MAX_CAFFEINE_PER_DRINK = 999;
 
 let data = loadData();
@@ -554,225 +554,172 @@ function formatPastDate(input) {
 }
 
 function preparePastDatePicker() {
-    const input =
-        document.getElementById(
-            "pastDrinkDate"
-        );
+    const input = document.getElementById("pastDrinkDate");
+    if (!input) return;
 
-    if (!input) {
-        return;
-    }
-
-    input.placeholder =
-        "MM/DD/YYYY";
+    input.max = dateKey(new Date());
 }
 
 
 function pastDateSelected() {
-    const input =
-        document.getElementById(
-            "pastDrinkDate"
-        );
+    const input = document.getElementById("pastDrinkDate");
+    if (!input) return;
 
-    if (!input) {
+    const selectedDate = input.value;
+
+    if (!selectedDate) {
+        alert("Please choose a date.");
         return;
     }
 
-    const value =
-        input.value.trim();
+    const today = dateKey(new Date());
 
-    const match =
-        value.match(
-            /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/
-        );
-
-    if (!match) {
-        alert(
-            "Enter the date as MM/DD/YYYY."
-        );
-
-        input.focus();
-
+    if (selectedDate > today) {
+        alert("You can't log caffeine for a future date.");
         return;
     }
 
-    const month =
-        Number(match[1]);
-
-    const day =
-        Number(match[2]);
-
-    const year =
-        Number(match[3]);
-
-    const selected =
-        new Date(
-            year,
-            month - 1,
-            day
-        );
-
-    if (
-        selected.getFullYear() !== year ||
-        selected.getMonth() !== month - 1 ||
-        selected.getDate() !== day
-    ) {
-        alert(
-            "Please enter a valid date."
-        );
-
-        return;
-    }
-
-    const today =
-        new Date();
-
-    today.setHours(
-        23,
-        59,
-        59,
-        999
-    );
-
-    if (selected > today) {
-        alert(
-            "You can't log caffeine for a future date."
-        );
-
-        return;
-    }
-
-    const selectedDate =
-        dateKey(selected);
-
-    openLogger(
-        selectedDate
-    );
-
+    openLogger(selectedDate);
     input.value = "";
 }
 
 /* =========================
-   EDIT DRINK
+   EDIT DRINK MODAL
 ========================= */
 
+let editingDrink = null;
+let editingDrinkTime = "morning";
+
 function editDrink(dayKey, id) {
-    const day =
-        data.days[dayKey];
+    const day = data.days[dayKey];
 
-    if (
-        !day ||
-        !Array.isArray(day.entries)
-    ) {
-        return;
-    }
+    if (!day || !Array.isArray(day.entries)) return;
 
-    const drink =
-        day.entries.find(
-            entry =>
-                String(entry.id) ===
-                String(id)
-        );
-
-    if (!drink) {
-        return;
-    }
-
-    const newName =
-        prompt(
-            "Drink name:",
-            drink.name
-        );
-
-    if (newName === null) {
-        return;
-    }
-
-    const cleanName =
-        newName.trim();
-
-    if (!cleanName) {
-        alert(
-            "Please enter a drink name."
-        );
-
-        return;
-    }
-
-    const newAmount =
-        prompt(
-            "Caffeine amount (mg):",
-            drink.amount
-        );
-
-    if (newAmount === null) {
-        return;
-    }
-
-    const amount =
-        Number(newAmount);
-
-    if (
-    !Number.isInteger(amount) ||
-    amount < 1 ||
-    amount > MAX_CAFFEINE_PER_DRINK
-) {
-    alert(
-        "Caffeine must be a whole number between 1 and 999 mg."
+    const drink = day.entries.find(
+        entry => String(entry.id) === String(id)
     );
 
-    return;
+    if (!drink) return;
+
+    editingDrink = { dayKey, id };
+
+    document.getElementById("editDrinkName").value =
+        drink.name || "";
+
+    document.getElementById("editDrinkAmount").value =
+        drink.amount;
+
+    document.getElementById("editDrinkError").textContent = "";
+
+    selectEditDrinkTime(
+        ["morning", "afternoon", "night"].includes(drink.timeOfDay)
+            ? drink.timeOfDay
+            : "morning"
+    );
+
+    document.getElementById("editDrinkOverlay")
+        .classList.remove("hidden");
+
+    document.body.classList.add("editing-drink");
+
+    document.getElementById("editDrinkName").focus();
 }
 
-    const currentTime =
-        drink.timeOfDay || "morning";
+function selectEditDrinkTime(time) {
+    if (!["morning", "afternoon", "night"].includes(time)) return;
 
-    const newTime =
-        prompt(
-            "Time of day (morning, afternoon, or night):",
-            currentTime
-        );
+    editingDrinkTime = time;
 
-    if (newTime === null) {
+    document.querySelectorAll("[data-edit-time]")
+        .forEach(button => {
+            const selected = button.dataset.editTime === time;
+
+            button.classList.toggle("selected", selected);
+            button.setAttribute("aria-pressed", String(selected));
+        });
+}
+
+function closeEditDrink() {
+    document.getElementById("editDrinkOverlay")
+        ?.classList.add("hidden");
+
+    document.body.classList.remove("editing-drink");
+
+    editingDrink = null;
+}
+
+function saveEditedDrink(event) {
+    event.preventDefault();
+
+    if (!editingDrink) return;
+
+    const name = document.getElementById("editDrinkName")
+        .value.trim();
+
+    const amount = Number(
+        document.getElementById("editDrinkAmount").value
+    );
+
+    const error = document.getElementById("editDrinkError");
+
+    if (!name) {
+        error.textContent = "Please enter a drink name.";
         return;
     }
-
-    const cleanTime =
-        newTime.trim().toLowerCase();
 
     if (
-        ![
-            "morning",
-            "afternoon",
-            "night"
-        ].includes(cleanTime)
+        !Number.isInteger(amount) ||
+        amount < 1 ||
+        amount > MAX_CAFFEINE_PER_DRINK
     ) {
-        alert(
-            "Please enter morning, afternoon, or night."
-        );
-
+        error.textContent =
+            "Enter a whole number between 1 and 999 mg.";
         return;
     }
 
-    drink.name = cleanName;
+    const day = data.days[editingDrink.dayKey];
+
+    const drink = day?.entries?.find(
+        entry => String(entry.id) === String(editingDrink.id)
+    );
+
+    if (!drink) {
+        error.textContent = "This drink could not be found.";
+        return;
+    }
+
+    drink.name = name;
     drink.amount = amount;
-    drink.timeOfDay = cleanTime;
+    drink.timeOfDay = editingDrinkTime;
 
-    day.caffeine =
-        day.entries.reduce(
-            (total, entry) =>
-                total +
-                Number(entry.amount || 0),
-            0
-        );
+    day.caffeine = day.entries.reduce(
+        (total, entry) => total + Number(entry.amount || 0),
+        0
+    );
 
-    day.drinks =
-        day.entries.length;
+    day.drinks = day.entries.length;
 
     saveData();
-
+    closeEditDrink();
     updateApp();
 }
+
+// Close when tapping outside the modal or pressing Escape
+document.addEventListener("click", event => {
+    if (event.target?.id === "editDrinkOverlay") {
+        closeEditDrink();
+    }
+});
+
+document.addEventListener("keydown", event => {
+    if (
+        event.key === "Escape" &&
+        !document.getElementById("editDrinkOverlay")
+            ?.classList.contains("hidden")
+    ) {
+        closeEditDrink();
+    }
+});
 
 
 /* =========================
@@ -1023,6 +970,41 @@ function renderChart() {
             value
         });
     }
+
+// HOME: LAST 7 DAYS EMPTY STATE
+
+const hasDrinksThisWeek = days.some(day => {
+    const entries = data.days[day.key]?.entries;
+    return Array.isArray(entries) && entries.length > 0;
+});
+
+if (!hasDrinksThisWeek) {
+    const hasAnyHistory = Object.values(data.days).some(day =>
+        Array.isArray(day?.entries) && day.entries.length > 0
+    );
+
+    const empty = document.createElement("div");
+    empty.className = "weekly-chart-empty";
+
+    const icon = document.createElement("div");
+    icon.className = "weekly-chart-empty-icon";
+    icon.textContent = "📊";
+
+    const title = document.createElement("strong");
+    title.textContent = hasAnyHistory
+        ? "Nothing logged this week"
+        : "Your journey starts here";
+
+    const message = document.createElement("p");
+    message.textContent = hasAnyHistory
+        ? "No caffeine logged in the last 7 days. Log a drink to start a new weekly trend."
+        : "Log your first drink to see your weekly caffeine trends.";
+
+    empty.append(icon, title, message);
+    container.appendChild(empty);
+
+    return;
+}
 
     const max =
         Math.max(
@@ -2492,7 +2474,750 @@ if (willOpen) {
 }
 }
 
+/* =========================
+   COLLAPSIBLE HISTORY SECTIONS
+========================= */
+
+const HISTORY_FOLD_KEY = "caffTrackHistorySections";
+
+function getHistoryFoldSettings() {
+    try {
+        return JSON.parse(
+            localStorage.getItem(HISTORY_FOLD_KEY) || "{}"
+        );
+    } catch {
+        return {};
+    }
+}
+
+function setupCollapsibleHistory() {
+    const settings = getHistoryFoldSettings();
+
+    const sections = [
+        {
+            id: "weekday",
+            selector: ".weekday-insights-card",
+            title: "Day of the Week",
+            subtitle: "Your habits Monday through Sunday",
+            defaultOpen: false
+        },
+        {
+            id: "timeofday",
+            selector: ".time-insights-card",
+            title: "Time of Day",
+            subtitle: "Morning, afternoon, and night",
+            defaultOpen: false
+        },
+        {
+            id: "mostdrinks",
+            selector: ".drink-insights-card",
+            title: "Most Logged Drinks",
+            subtitle: "Your most common drinks",
+            defaultOpen: false
+        },
+        {
+            id: "entries",
+            selector: "#historyList",
+            title: "Logged Drinks",
+            subtitle: "View and edit your history",
+            defaultOpen: true
+        }
+    ];
+
+    sections.forEach(config => {
+        const target = document.querySelector(config.selector);
+        const section = target?.closest("section");
+
+        if (!section || section.dataset.foldReady === "true") {
+            return;
+        }
+
+        section.dataset.foldReady = "true";
+
+        const isOpen =
+            typeof settings[config.id] === "boolean"
+                ? settings[config.id]
+                : config.defaultOpen;
+
+        const existingChildren = Array.from(section.children);
+
+        // Move the existing content into a collapsible body.
+        const content = document.createElement("div");
+        content.className = "history-fold-content";
+
+        existingChildren.forEach(child => {
+            content.appendChild(child);
+        });
+
+        // Create the clickable section header.
+        const header = document.createElement("button");
+        header.type = "button";
+        header.className = "history-fold-header";
+        header.setAttribute("aria-expanded", String(isOpen));
+
+        const heading = document.createElement("span");
+        heading.className = "history-fold-heading";
+
+        const title = document.createElement("strong");
+        title.textContent = config.title;
+
+        const subtitle = document.createElement("small");
+        subtitle.textContent = config.subtitle;
+
+        heading.append(title, subtitle);
+
+        const arrow = document.createElement("span");
+        arrow.className = "history-fold-arrow";
+        arrow.innerHTML = '<span class="history-chevron"></span>';
+
+        header.append(heading, arrow);
+
+        section.classList.add("history-fold-section");
+        section.append(header, content);
+
+        // Hide the original heading, now duplicated by the header.
+        const originalHeading = content.querySelector(
+            ":scope > h2, :scope > .section-heading"
+        );
+
+        const originalEyebrow = content.querySelector(
+            ":scope > .eyebrow"
+        );
+
+        if (originalHeading) {
+            originalHeading.classList.add("history-fold-original-heading");
+        }
+
+        if (originalEyebrow) {
+            originalEyebrow.classList.add("history-fold-original-heading");
+        }
+
+        content.hidden = !isOpen;
+
+        header.addEventListener("click", () => {
+            const willOpen = content.hidden;
+
+            content.hidden = !willOpen;
+
+            header.setAttribute(
+                "aria-expanded",
+                String(willOpen)
+            );
+
+            const latest = getHistoryFoldSettings();
+            latest[config.id] = willOpen;
+
+            localStorage.setItem(
+                HISTORY_FOLD_KEY,
+                JSON.stringify(latest)
+            );
+        });
+    });
+
+    // Preserve the existing Caffeine Trend toggle.
+    const trendButton = document.getElementById(
+        "historyTrendButton"
+    );
+
+    const trendPanel = document.getElementById(
+        "historyTrendPanel"
+    );
+
+    if (trendButton && trendPanel) {
+        // Restore the previous open state.
+        if (
+            settings.trend === true &&
+            trendPanel.classList.contains("hidden")
+        ) {
+            toggleHistoryTrend();
+        }
+
+        trendButton.addEventListener("click", () => {
+            const latest = getHistoryFoldSettings();
+
+            latest.trend = !trendPanel.classList.contains(
+                "hidden"
+            );
+
+            localStorage.setItem(
+                HISTORY_FOLD_KEY,
+                JSON.stringify(latest)
+            );
+        });
+    }
+}
+
+/* =========================
+   MOST LOGGED DRINKS
+========================= */
+
+let drinkInsightsMode = "count";
+
+function setDrinkInsightsMode(mode) {
+    if (!["count", "caffeine"].includes(mode)) return;
+
+    drinkInsightsMode = mode;
+
+    document.querySelectorAll(".drink-insights-mode")
+        .forEach(button => {
+            button.classList.toggle(
+                "active",
+                button.dataset.mode === mode
+            );
+        });
+
+    renderMostLoggedDrinks();
+}
+
+function renderMostLoggedDrinks() {
+    const container =
+        document.getElementById("mostLoggedDrinks");
+
+    if (!container) return;
+
+    const drinks = new Map();
+
+    Object.entries(data.days || {}).forEach(([key, day]) => {
+        if (!isDateInHistoryRange(key)) return;
+        if (!Array.isArray(day.entries)) return;
+
+        day.entries.forEach(entry => {
+            const name = String(
+                entry.name || "Caffeine"
+            ).trim() || "Caffeine";
+
+            const normalized = name.toLowerCase();
+            const amount = Number(entry.amount) || 0;
+
+            if (!drinks.has(normalized)) {
+                drinks.set(normalized, {
+                    name,
+                    count: 0,
+                    caffeine: 0
+                });
+            }
+
+            const drink = drinks.get(normalized);
+            drink.count++;
+            drink.caffeine += amount;
+        });
+    });
+
+    const metric = drinkInsightsMode;
+    const ranked = [...drinks.values()]
+        .sort((a, b) =>
+            b[metric] - a[metric] ||
+            a.name.localeCompare(b.name)
+        )
+        .slice(0, 10);
+
+    container.replaceChildren();
+
+   if (!ranked.length) {
+    showHistoryEmptyState(
+        container,
+        "Log a drink to discover which ones you enjoy most."
+    );
+    return;
+}
+
+    const max = Math.max(
+        1,
+        ...ranked.map(drink => drink[metric])
+    );
+
+    ranked.forEach(drink => {
+        const row = document.createElement("div");
+        row.className = "drink-insights-row";
+
+        const heading = document.createElement("div");
+        heading.className = "drink-insights-heading";
+
+        const name = document.createElement("strong");
+        name.textContent = drink.name;
+
+        const value = document.createElement("span");
+        value.textContent = metric === "count"
+            ? `${drink.count} ${drink.count === 1 ? "time" : "times"}`
+            : `${drink.caffeine.toLocaleString()} mg`;
+
+        heading.append(name, value);
+
+        const track = document.createElement("div");
+        track.className = "drink-insights-track";
+
+        const bar = document.createElement("div");
+        bar.className = "drink-insights-bar";
+        bar.style.width =
+            `${(drink[metric] / max) * 100}%`;
+
+        track.appendChild(bar);
+        row.append(heading, track);
+        container.appendChild(row);
+    });
+}
+/* =========================
+   TIME OF DAY INSIGHTS
+========================= */
+
+let timeInsightsMode = "count";
+
+function setTimeInsightsMode(mode) {
+    if (!["count", "caffeine"].includes(mode)) return;
+
+    timeInsightsMode = mode;
+
+    document.querySelectorAll(".time-insights-mode")
+        .forEach(button => {
+            button.classList.toggle(
+                "active",
+                button.dataset.mode === mode
+            );
+        });
+
+    renderTimeOfDayInsights();
+}
+
+function renderTimeOfDayInsights() {
+    const container =
+        document.getElementById("timeOfDayInsights");
+
+    if (!container) return;
+
+    const periods = [
+        { key: "morning", label: "Morning", icon: "☀️", count: 0, caffeine: 0 },
+        { key: "afternoon", label: "Afternoon", icon: "🌤️", count: 0, caffeine: 0 },
+        { key: "night", label: "Night", icon: "🌙", count: 0, caffeine: 0 }
+    ];
+
+    let unclassified = 0;
+
+    Object.entries(data.days || {}).forEach(([key, day]) => {
+        if (!isDateInHistoryRange(key)) return;
+        if (!Array.isArray(day.entries)) return;
+
+        day.entries.forEach(entry => {
+            const time = String(entry.timeOfDay || "")
+                .trim()
+                .toLowerCase();
+
+            const period = periods.find(p => p.key === time);
+
+            if (!period) {
+                unclassified++;
+                return;
+            }
+
+            period.count++;
+            period.caffeine += Number(entry.amount) || 0;
+        });
+    });
+
+    container.replaceChildren();
+
+    const metric = timeInsightsMode;
+
+    const total = periods.reduce(
+        (sum, period) => sum + period[metric],
+        0
+    );
+
+   if (total === 0) {
+    showHistoryEmptyState(
+        container,
+        "Log drinks with a time of day to discover your daily habits."
+    );
+    return;
+}
+
+    const max = Math.max(
+        1,
+        ...periods.map(period => period[metric])
+    );
+
+    periods.forEach(period => {
+        const row = document.createElement("div");
+        row.className = "time-insights-row";
+
+        const heading = document.createElement("div");
+        heading.className = "time-insights-heading";
+
+        const label = document.createElement("strong");
+        label.textContent = `${period.icon} ${period.label}`;
+
+        const value = document.createElement("span");
+        value.textContent = metric === "count"
+            ? `${period.count} ${period.count === 1 ? "drink" : "drinks"}`
+            : `${period.caffeine.toLocaleString()} mg`;
+
+        heading.append(label, value);
+
+        const track = document.createElement("div");
+        track.className = "time-insights-track";
+
+        const bar = document.createElement("div");
+        bar.className = "time-insights-bar";
+        bar.style.width = `${period[metric] / max * 100}%`;
+
+        track.appendChild(bar);
+
+        const percentage = document.createElement("small");
+        percentage.className = "time-insights-percentage";
+        percentage.textContent =
+            `${Math.round(period[metric] / total * 100)}% of ${metric === "count" ? "drinks" : "caffeine"}`;
+
+        row.append(heading, track, percentage);
+        container.appendChild(row);
+    });
+
+    if (unclassified > 0) {
+        const note = document.createElement("p");
+        note.className = "time-insights-note";
+        note.textContent =
+            `${unclassified} older ${unclassified === 1 ? "entry has" : "entries have"} no time-of-day category and ${unclassified === 1 ? "is" : "are"} excluded.`;
+        container.appendChild(note);
+    }
+}
+
+/* =========================
+   DAY OF WEEK INSIGHTS
+========================= */
+
+let weekdayInsightsMode = "caffeine";
+
+function setWeekdayInsightsMode(mode) {
+    if (!["caffeine", "count"].includes(mode)) return;
+
+    weekdayInsightsMode = mode;
+
+    document.querySelectorAll(".weekday-insights-mode")
+        .forEach(button => {
+            button.classList.toggle(
+                "active",
+                button.dataset.mode === mode
+            );
+        });
+
+    renderWeekdayInsights();
+}
+
+function renderWeekdayInsights() {
+    const container = document.getElementById("weekdayInsights");
+    if (!container) return;
+
+    const weekdays = [
+        { label: "Monday", caffeine: 0, count: 0, days: 0 },
+        { label: "Tuesday", caffeine: 0, count: 0, days: 0 },
+        { label: "Wednesday", caffeine: 0, count: 0, days: 0 },
+        { label: "Thursday", caffeine: 0, count: 0, days: 0 },
+        { label: "Friday", caffeine: 0, count: 0, days: 0 },
+        { label: "Saturday", caffeine: 0, count: 0, days: 0 },
+        { label: "Sunday", caffeine: 0, count: 0, days: 0 }
+    ];
+
+    // Use the same date range as History.
+    const today = new Date(appDate());
+    today.setHours(0, 0, 0, 0);
+
+    let start = new Date(today);
+
+    if (historyRange === "week") {
+        start.setDate(start.getDate() - 6);
+    } else if (historyRange === "month") {
+        start.setDate(start.getDate() - 29);
+    } else if (historyRange === "year") {
+        start.setDate(start.getDate() - 364);
+    } else {
+        const dates = Object.keys(data.days || {})
+            .filter(key => isDateInHistoryRange(key))
+            .sort();
+
+        if (dates.length === 0) {
+            container.textContent = "No history available yet.";
+            return;
+        }
+
+        start = new Date(dates[0] + "T00:00:00");
+    }
+
+    // Count every calendar day, including caffeine-free days.
+    const cursor = new Date(start);
+
+    while (cursor <= today) {
+        const key = dateKey(cursor);
+        const index = (cursor.getDay() + 6) % 7;
+        const weekday = weekdays[index];
+
+        weekday.days++;
+
+        const day = data.days[key];
+
+        if (day) {
+            weekday.caffeine += Number(day.caffeine) || 0;
+            weekday.count += Array.isArray(day.entries)
+                ? day.entries.length
+                : Number(day.drinks) || 0;
+        }
+
+        cursor.setDate(cursor.getDate() + 1);
+    }
+
+    const metric = weekdayInsightsMode;
+
+    const values = weekdays.map(day =>
+        metric === "caffeine"
+            ? day.caffeine / Math.max(day.days, 1)
+            : day.count
+    );
+
+    const max = Math.max(1, ...values);
+container.replaceChildren();
+
+const hasLoggedCaffeine = weekdays.some(
+    day => day.caffeine > 0 || day.count > 0
+);
+
+if (!hasLoggedCaffeine) {
+    showHistoryEmptyState(
+        container,
+        "Start logging caffeine to discover which days you drink the most."
+    );
+    return;
+}
+
+weekdays.forEach((day, index) => {
+        const value = values[index];
+        const row = document.createElement("div");
+        row.className = "weekday-insights-row";
+
+        const heading = document.createElement("div");
+        heading.className = "weekday-insights-heading";
+
+        const label = document.createElement("strong");
+        label.textContent = day.label;
+
+        const amount = document.createElement("span");
+
+        amount.textContent = metric === "caffeine"
+            ? `${Math.round(value)} mg/day`
+            : `${day.count} ${day.count === 1 ? "drink" : "drinks"}`;
+
+        heading.append(label, amount);
+
+        const track = document.createElement("div");
+        track.className = "weekday-insights-track";
+
+        const bar = document.createElement("div");
+        bar.className = "weekday-insights-bar";
+        bar.style.width = `${(value / max) * 100}%`;
+
+        track.appendChild(bar);
+
+        const detail = document.createElement("small");
+        detail.className = "weekday-insights-detail";
+
+        detail.textContent = metric === "caffeine"
+            ? `Across ${day.days} ${day.days === 1 ? "day" : "days"}`
+            : `${day.days} ${day.days === 1 ? "day" : "days"} in selected period`;
+
+        row.append(heading, track, detail);
+        container.appendChild(row);
+    });
+}
+
+/* =========================
+   INSIGHTS SUMMARY
+========================= */
+
+function renderInsightsSummary() {
+    const drinks = new Map();
+    const periods = {
+        morning: 0,
+        afternoon: 0,
+        night: 0
+    };
+
+    const weekdays = [
+        { name: "Sunday", caffeine: 0, days: 0 },
+        { name: "Monday", caffeine: 0, days: 0 },
+        { name: "Tuesday", caffeine: 0, days: 0 },
+        { name: "Wednesday", caffeine: 0, days: 0 },
+        { name: "Thursday", caffeine: 0, days: 0 },
+        { name: "Friday", caffeine: 0, days: 0 },
+        { name: "Saturday", caffeine: 0, days: 0 }
+    ];
+
+    const today = new Date(appDate());
+    today.setHours(0, 0, 0, 0);
+
+    const recordedDates = Object.keys(data.days || {})
+        .filter(key => isDateInHistoryRange(key))
+        .sort();
+
+    let start = new Date(today);
+
+    if (historyRange === "week") {
+        start.setDate(start.getDate() - 6);
+    } else if (historyRange === "month") {
+        start.setDate(start.getDate() - 29);
+    } else if (historyRange === "year") {
+        start.setDate(start.getDate() - 364);
+    } else if (recordedDates.length) {
+        start = new Date(recordedDates[0] + "T00:00:00");
+    }
+
+    const hasHistory = recordedDates.length > 0;
+
+    if (hasHistory) {
+        // Include caffeine-free days in weekday averages.
+        const cursor = new Date(start);
+
+        while (cursor <= today) {
+            const key = dateKey(cursor);
+            const weekday = weekdays[cursor.getDay()];
+            const day = data.days[key];
+
+            weekday.days++;
+            weekday.caffeine += Number(day?.caffeine) || 0;
+
+            cursor.setDate(cursor.getDate() + 1);
+        }
+    }
+
+    let totalDrinks = 0;
+    let classifiedDrinks = 0;
+
+    recordedDates.forEach(key => {
+        const day = data.days[key];
+
+        if (!Array.isArray(day?.entries)) return;
+
+        day.entries.forEach(entry => {
+            totalDrinks++;
+
+            const name = String(entry.name || "Caffeine")
+                .trim() || "Caffeine";
+
+            const normalized = name.toLowerCase();
+
+            if (!drinks.has(normalized)) {
+                drinks.set(normalized, { name, count: 0 });
+            }
+
+            drinks.get(normalized).count++;
+
+            const time = String(entry.timeOfDay || "")
+                .toLowerCase();
+
+            if (Object.hasOwn(periods, time)) {
+                periods[time]++;
+                classifiedDrinks++;
+            }
+        });
+    });
+
+    // Favorite drink
+    const favorite = [...drinks.values()]
+        .sort((a, b) =>
+            b.count - a.count ||
+            a.name.localeCompare(b.name)
+        )[0];
+
+    setText(
+        "insightFavoriteDrink",
+        favorite?.name || "—"
+    );
+
+    setText(
+        "insightFavoriteDetail",
+        favorite
+            ? `${favorite.count} ${favorite.count === 1 ? "time" : "times"} logged`
+            : "No drinks yet"
+    );
+
+    // Peak weekday, based on average mg per calendar day.
+    const peak = weekdays
+        .filter(day => day.days > 0)
+        .sort((a, b) =>
+            (b.caffeine / b.days) -
+            (a.caffeine / a.days)
+        )[0];
+
+    const peakAverage = peak
+        ? Math.round(peak.caffeine / peak.days)
+        : 0;
+
+    setText(
+        "insightPeakDay",
+        peak && peakAverage > 0 ? peak.name : "—"
+    );
+
+    setText(
+        "insightPeakDayDetail",
+        peak && peakAverage > 0
+            ? `${peakAverage} mg/day average`
+            : "No caffeine recorded"
+    );
+
+    // Most common time of day
+    const labels = {
+        morning: "Morning",
+        afternoon: "Afternoon",
+        night: "Night"
+    };
+
+    const commonTime = Object.entries(periods)
+        .sort((a, b) => b[1] - a[1])[0];
+
+    const commonCount = commonTime?.[1] || 0;
+
+    setText(
+        "insightCommonTime",
+        commonCount > 0 ? labels[commonTime[0]] : "—"
+    );
+
+    setText(
+        "insightCommonTimeDetail",
+        commonCount > 0
+            ? `${Math.round(commonCount / classifiedDrinks * 100)}% of categorized drinks`
+            : totalDrinks > 0
+                ? "No time categories yet"
+                : "No drinks yet"
+    );
+}
+
+/* =========================
+   HISTORY EMPTY STATES
+========================= */
+
+function showHistoryEmptyState(container, message) {
+    if (!container) return;
+
+    container.replaceChildren();
+
+    const empty = document.createElement("div");
+    empty.className = "history-empty-state";
+
+    const icon = document.createElement("div");
+    icon.className = "history-empty-icon";
+    icon.textContent = "📊";
+
+    const title = document.createElement("strong");
+    title.textContent = "Nothing to show just yet";
+
+    const description = document.createElement("p");
+    description.textContent = message;
+
+    empty.append(icon, title, description);
+    container.appendChild(empty);
+}
+
 function renderHistory() {
+    renderMostLoggedDrinks();
+    renderTimeOfDayInsights();
+    renderWeekdayInsights();
+    renderInsightsSummary();
+
     const stats =
         getHistoryRangeStats();
 
@@ -2568,21 +3293,12 @@ function renderHistory() {
         .reverse();
 
     if (keys.length === 0) {
-        const empty =
-            document.createElement(
-                "p"
-            );
-
-        empty.className =
-            "page-description";
-
-        empty.textContent =
-            "No caffeine has been logged yet.";
-
-        container.appendChild(empty);
-
-        return;
-    }
+    showHistoryEmptyState(
+        container,
+        "No drinks logged for this period. Try another date range or log your first drink."
+    );
+    return;
+}
 
     keys.forEach(key => {
         const day =
@@ -3788,6 +4504,13 @@ function saveName(name) {
         name
     );
 
+    const nameInput =
+        document.getElementById("nameInput");
+
+    if (nameInput) {
+        nameInput.value = name;
+    }
+
     updateGreeting();
 }
 
@@ -4724,7 +5447,7 @@ function closeEditSavedDrink() {
 }
 
 
-function saveEditedDrink() {
+function saveEditedSavedDrink() {
     const id =
         document.getElementById(
             "editSavedDrinkId"
@@ -5376,6 +6099,8 @@ document.addEventListener(
     "DOMContentLoaded",
     () => {
         normalizeData();
+
+        setupCollapsibleHistory();
 
         addHistoryDrinksToMyDrinks();
 

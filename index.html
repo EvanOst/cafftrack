@@ -350,6 +350,34 @@
 
     </div>
 
+<!-- INSIGHTS SUMMARY -->
+<section class="section insights-summary-section">
+    <p class="eyebrow">YOUR CAFFEINE PATTERNS</p>
+    <h2>At a Glance</h2>
+
+    <div class="insights-summary-grid">
+        <div class="card insights-summary-item">
+            <span class="insights-summary-icon">☕</span>
+            <small>FAVORITE DRINK</small>
+            <strong id="insightFavoriteDrink">—</strong>
+            <span id="insightFavoriteDetail">No drinks yet</span>
+        </div>
+
+        <div class="card insights-summary-item">
+            <span class="insights-summary-icon">📅</span>
+            <small>PEAK CAFFEINE DAY</small>
+            <strong id="insightPeakDay">—</strong>
+            <span id="insightPeakDayDetail">No data yet</span>
+        </div>
+
+        <div class="card insights-summary-item">
+            <span class="insights-summary-icon">🕒</span>
+            <small>MOST COMMON TIME</small>
+            <strong id="insightCommonTime">—</strong>
+            <span id="insightCommonTimeDetail">No data yet</span>
+        </div>
+    </div>
+</section>
 
   <!-- HISTORY TREND -->
 <div class="history-trend-toggle">
@@ -418,14 +446,11 @@
         <div class="past-date-row">
 
             <input
-                id="pastDrinkDate"
-                class="past-date-picker"
-                type="text"
-                inputmode="numeric"
-                placeholder="MM/DD/YYYY"
-                maxlength="10"
-                oninput="formatPastDate(this)"
-            >
+    id="pastDrinkDate"
+    class="past-date-picker"
+    type="date"
+    aria-label="Choose a date to log caffeine"
+>
 
             <button
                 type="button"
@@ -439,6 +464,93 @@
 
     </div>
 
+<!-- DAY OF WEEK INSIGHTS -->
+<section class="section">
+    <p class="eyebrow">WEEKLY HABITS</p>
+    <h2>Day of the Week</h2>
+
+    <div class="card weekday-insights-card">
+        <div class="drink-insights-toggle">
+            <button type="button"
+                class="weekday-insights-mode active"
+                data-mode="caffeine"
+                onclick="setWeekdayInsightsMode('caffeine')">
+                Avg. Caffeine
+            </button>
+
+            <button type="button"
+                class="weekday-insights-mode"
+                data-mode="count"
+                onclick="setWeekdayInsightsMode('count')">
+                Drinks Logged
+            </button>
+        </div>
+
+        <div id="weekdayInsights"></div>
+    </div>
+</section>
+
+    <!-- TIME OF DAY INSIGHTS -->
+<section class="section">
+    <p class="eyebrow">CAFFEINE HABITS</p>
+    <h2>Time of Day</h2>
+
+    <div class="card time-insights-card">
+
+        <div class="drink-insights-toggle">
+            <button
+                type="button"
+                class="time-insights-mode active"
+                data-mode="count"
+                onclick="setTimeInsightsMode('count')"
+            >
+                Drinks
+            </button>
+
+            <button
+                type="button"
+                class="time-insights-mode"
+                data-mode="caffeine"
+                onclick="setTimeInsightsMode('caffeine')"
+            >
+                Caffeine (mg)
+            </button>
+        </div>
+
+        <div id="timeOfDayInsights"></div>
+
+    </div>
+</section>
+
+<!-- MOST LOGGED DRINKS -->
+<section class="section">
+    <p class="eyebrow">DRINK INSIGHTS</p>
+    <h2>Most Logged Drinks</h2>
+
+    <div class="card drink-insights-card">
+        <div class="drink-insights-toggle">
+            <button
+                type="button"
+                class="drink-insights-mode active"
+                data-mode="count"
+                onclick="setDrinkInsightsMode('count')"
+            >
+                Times Logged
+            </button>
+
+            <button
+                type="button"
+                class="drink-insights-mode"
+                data-mode="caffeine"
+                onclick="setDrinkInsightsMode('caffeine')"
+            >
+                Total Caffeine
+            </button>
+        </div>
+
+        <div id="mostLoggedDrinks"></div>
+    </div>
+</section>
 
     <!-- HISTORY ENTRIES -->
     <section class="section">
@@ -1002,13 +1114,37 @@
                 Reset
             </button>
 
+           </div>
+
+        <!-- HELP & FEEDBACK -->
+        <div class="setting">
+
+            <div>
+                <strong>
+                    Help Improve CaffTrack
+                </strong>
+
+                <small>
+                    Found a bug or have an idea? Let us know.
+                </small>
+            </div>
+
+            <a
+                href="https://tally.so/r/KpYxaM"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="button"
+            >
+                Feedback ↗
+            </a>
+
         </div>
 
     </div>
 
 
     <div class="app-version">
-        CaffTrack · v1.3.0
+        CaffTrack · v1.3.1 Beta
     </div>
 
 </main>
@@ -1492,7 +1628,7 @@
         <button
             class="save-drink-button"
             type="button"
-            onclick="saveEditedDrink()"
+          onclick="saveEditedSavedDrink()"
         >
             Save Changes
         </button>
@@ -1641,6 +1777,86 @@
 
 
 <script src="script.js"></script>
+
+<!-- EDIT HISTORY DRINK MODAL -->
+<div id="editDrinkOverlay" class="edit-drink-overlay hidden">
+    <div
+        class="edit-drink-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="editDrinkTitle"
+    >
+        <div class="edit-drink-header">
+            <div>
+                <h2 id="editDrinkTitle">Edit Drink</h2>
+                <p>Update your logged drink details.</p>
+            </div>
+
+            <button
+                type="button"
+                class="edit-drink-close"
+                onclick="closeEditDrink()"
+                aria-label="Close"
+            >×</button>
+        </div>
+
+        <form id="editDrinkForm" onsubmit="saveEditedDrink(event)">
+            <label class="edit-drink-label" for="editDrinkName">
+                Drink Name
+            </label>
+            <input
+                id="editDrinkName"
+                class="edit-drink-input"
+                type="text"
+                maxlength="100"
+                autocomplete="off"
+                required
+            >
+
+            <label class="edit-drink-label" for="editDrinkAmount">
+                Caffeine (mg)
+            </label>
+            <input
+                id="editDrinkAmount"
+                class="edit-drink-input"
+                type="number"
+                min="1"
+                max="999"
+                step="1"
+                inputmode="numeric"
+                required
+            >
+
+            <div class="edit-drink-label">Time of Day</div>
+
+            <div class="edit-drink-times">
+                <button type="button" data-edit-time="morning"
+                    onclick="selectEditDrinkTime('morning')">
+                    ☀️ Morning
+                </button>
+                <button type="button" data-edit-time="afternoon"
+                    onclick="selectEditDrinkTime('afternoon')">
+                    🌤️ Afternoon
+                </button>
+                <button type="button" data-edit-time="night"
+                    onclick="selectEditDrinkTime('night')">
+                    🌙 Night
+                </button>
+            </div>
+
+            <p id="editDrinkError" class="edit-drink-error" role="alert"></p>
+
+            <div class="edit-drink-actions">
+                <button type="button" class="edit-drink-cancel"
+                    onclick="closeEditDrink()">Cancel</button>
+
+                <button type="submit" class="edit-drink-save">
+                    Save Changes
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 
 </body>
 </html>

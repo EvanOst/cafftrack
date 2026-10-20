@@ -2556,3 +2556,646 @@ body.dark-mode .commitment-card small {
 .milestones-group .milestone:last-child {
     margin-bottom: 0;
 }
+.feedback-button {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 12px 20px;
+    background: #79C9E8;
+    color: #172747;
+    border-radius: 12px;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.feedback-button:hover {
+    opacity: 0.9;
+}
+.setting a.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    white-space: nowrap;
+}
+/* MOST LOGGED DRINKS */
+
+.drink-insights-card {
+    padding: 20px;
+}
+
+.drink-insights-toggle {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+}
+
+.drink-insights-mode {
+    flex: 1;
+    padding: 11px 8px;
+    border: 1px solid var(--border, #d5dde5);
+    border-radius: 10px;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.drink-insights-mode.active {
+    background: #3d6f9f;
+    color: white;
+    border-color: #3d6f9f;
+}
+
+.drink-insights-row {
+    margin-bottom: 20px;
+}
+
+.drink-insights-row:last-child {
+    margin-bottom: 0;
+}
+
+.drink-insights-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 8px;
+    font-size: 13px;
+}
+
+.drink-insights-heading strong {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.drink-insights-heading span {
+    flex-shrink: 0;
+    color: var(--text-muted, #8b98a5);
+    font-size: 12px;
+}
+
+.drink-insights-track {
+    height: 10px;
+    background: rgba(125, 150, 170, 0.15);
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.drink-insights-bar {
+    height: 100%;
+    background: #79a9d0;
+    border-radius: 999px;
+    transition: width 0.25s ease;
+}
+/* TIME OF DAY INSIGHTS */
+
+.time-insights-card {
+    padding: 20px;
+}
+
+.time-insights-mode {
+    flex: 1;
+    padding: 11px 8px;
+    border: 1px solid var(--border, #d5dde5);
+    border-radius: 10px;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.time-insights-mode.active {
+    background: #3d6f9f;
+    color: white;
+    border-color: #3d6f9f;
+}
+
+.time-insights-row {
+    margin-bottom: 22px;
+}
+
+.time-insights-row:last-child {
+    margin-bottom: 0;
+}
+
+.time-insights-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 9px;
+    font-size: 14px;
+}
+
+.time-insights-heading span {
+    color: var(--text-muted, #8b98a5);
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+.time-insights-track {
+    height: 12px;
+    border-radius: 999px;
+    overflow: hidden;
+    background: rgba(125, 150, 170, 0.15);
+}
+
+.time-insights-bar {
+    height: 100%;
+    background: #79a9d0;
+    border-radius: 999px;
+    transition: width 0.25s ease;
+}
+
+.time-insights-percentage {
+    display: block;
+    margin-top: 7px;
+    color: var(--text-muted, #8b98a5);
+    font-size: 12px;
+}
+
+.time-insights-note {
+    margin-top: 16px;
+    font-size: 12px;
+    opacity: 0.7;
+}
+/* EDIT DRINK MODAL */
+
+.edit-drink-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    background: rgba(0, 0, 0, 0.58);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.edit-drink-overlay.hidden {
+    display: none;
+}
+
+body.editing-drink {
+    overflow: hidden;
+}
+
+.edit-drink-modal {
+    width: 100%;
+    max-width: 430px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 26px;
+    border-radius: 22px;
+    background: var(--card-bg, #172747);
+    color: var(--text, #f7f4eb);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+}
+
+.edit-drink-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 15px;
+    margin-bottom: 24px;
+}
+
+.edit-drink-header h2 {
+    margin: 0 0 5px;
+    font-size: 23px;
+}
+
+.edit-drink-header p {
+    margin: 0;
+    opacity: 0.7;
+    font-size: 13px;
+}
+
+.edit-drink-close {
+    border: none;
+    background: transparent;
+    color: inherit;
+    font-size: 28px;
+    cursor: pointer;
+}
+
+.edit-drink-label {
+    display: block;
+    font-weight: 600;
+    font-size: 13px;
+    margin: 17px 0 8px;
+}
+
+.edit-drink-input {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 13px 14px;
+    border: 1px solid rgba(140, 155, 170, 0.4);
+    border-radius: 11px;
+    background: var(--input-bg, rgba(125, 150, 170, 0.12));
+    color: inherit;
+    font: inherit;
+    font-size: 16px;
+}
+
+.edit-drink-input:focus {
+    outline: 2px solid #79a9d0;
+    outline-offset: 1px;
+}
+
+.edit-drink-times {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.edit-drink-times button {
+    padding: 12px 5px;
+    border: 1px solid rgba(140, 155, 170, 0.4);
+    border-radius: 11px;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.edit-drink-times button.selected {
+    background: #3d6f9f;
+    border-color: #3d6f9f;
+    color: white;
+}
+
+.edit-drink-error {
+    min-height: 18px;
+    margin: 12px 0;
+    color: #e97878;
+    font-size: 12px;
+}
+
+.edit-drink-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.edit-drink-actions button {
+    flex: 1;
+    padding: 13px 10px;
+    border-radius: 11px;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.edit-drink-cancel {
+    background: transparent;
+    color: inherit;
+    border: 1px solid rgba(140, 155, 170, 0.4);
+}
+
+.edit-drink-save {
+    background: #79a9d0;
+    color: #172747;
+    border: none;
+}
+
+@media (max-width: 380px) {
+    .edit-drink-modal {
+        padding: 20px;
+    }
+
+    .edit-drink-times button {
+        font-size: 11px;
+    }
+}
+/* DAY OF WEEK INSIGHTS */
+
+.weekday-insights-card {
+    padding: 20px;
+}
+
+.weekday-insights-mode {
+    flex: 1;
+    padding: 11px 8px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.weekday-insights-mode.active {
+    background: var(--blue);
+    border-color: var(--blue);
+    color: white;
+}
+
+.weekday-insights-row {
+    margin-bottom: 19px;
+}
+
+.weekday-insights-row:last-child {
+    margin-bottom: 0;
+}
+
+.weekday-insights-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.weekday-insights-heading span {
+    color: var(--muted);
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+.weekday-insights-track {
+    height: 11px;
+    background: rgba(125, 150, 170, 0.15);
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.weekday-insights-bar {
+    height: 100%;
+    background: var(--blue);
+    border-radius: 999px;
+    transition: width 0.25s ease;
+}
+
+.weekday-insights-detail {
+    display: block;
+    margin-top: 6px;
+    color: var(--muted);
+    font-size: 11px;
+}
+
+/* =========================
+   COLLAPSIBLE HISTORY SECTIONS
+========================= */
+
+.history-fold-section {
+    overflow: hidden;
+    margin-bottom: 12px;
+    padding: 0 !important;
+
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+
+    box-shadow: var(--shadow);
+}
+
+.history-fold-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    width: 100%;
+    padding: 18px;
+
+    border: none;
+    background: transparent;
+    color: var(--text);
+
+    text-align: left;
+    cursor: pointer;
+}
+
+.history-fold-heading {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.history-fold-heading strong {
+    font-size: 16px;
+    font-weight: 750;
+}
+
+.history-fold-heading small {
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 400;
+}
+
+.history-fold-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 30px;
+    height: 30px;
+
+    border-radius: 9px;
+    background: var(--blue-light);
+    color: var(--blue);
+
+    font-size: 22px;
+    flex-shrink: 0;
+}
+
+.history-fold-content {
+    padding: 0 16px 18px;
+}
+
+.history-fold-content[hidden] {
+    display: none !important;
+}
+
+.history-fold-original-heading {
+    display: none !important;
+}
+
+.history-fold-content > .card {
+    margin-top: 0;
+}
+
+.history-fold-section .drink-insights-card,
+.history-fold-section .time-insights-card,
+.history-fold-section .weekday-insights-card {
+    box-shadow: none;
+    border: none;
+    padding: 4px 0 0;
+}
+
+.history-fold-header:focus-visible {
+    outline: 2px solid var(--blue);
+    outline-offset: -3px;
+}
+
+/* CLEAN HISTORY CHEVRONS */
+
+.history-fold-arrow {
+    width: 32px;
+    height: 32px;
+    font-size: 0;
+}
+
+.history-chevron {
+    display: block;
+    width: 9px;
+    height: 9px;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: translateY(-2px) rotate(45deg);
+    transition: transform 0.2s ease;
+}
+
+.history-fold-header[aria-expanded="true"] .history-chevron {
+    transform: translateY(2px) rotate(225deg);
+}
+/* INSIGHTS SUMMARY */
+
+.insights-summary-section {
+    margin-top: 22px;
+    margin-bottom: 24px;
+}
+
+.insights-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.insights-summary-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 0;
+    gap: 7px;
+    padding: 15px 12px;
+}
+
+.insights-summary-icon {
+    font-size: 21px;
+    margin-bottom: 5px;
+}
+
+.insights-summary-item small {
+    color: var(--muted);
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.4px;
+}
+
+.insights-summary-item strong {
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+}
+
+.insights-summary-item > span:last-child {
+    color: var(--muted);
+    font-size: 11px;
+    line-height: 1.4;
+}
+
+@media (max-width: 420px) {
+    .insights-summary-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .insights-summary-item {
+        display: grid;
+        grid-template-columns: 30px 1fr;
+        gap: 3px 12px;
+        align-items: center;
+        padding: 13px 15px;
+    }
+
+    .insights-summary-icon {
+        grid-row: 1 / 4;
+        margin: 0;
+    }
+}
+/* NATIVE DATE PICKER */
+
+#pastDrinkDate {
+    width: 100%;
+    min-width: 0;
+    min-height: 48px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#pastDrinkDate::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+}
+/* HISTORY EMPTY STATES */
+
+.history-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    padding: 26px 14px;
+    text-align: center;
+}
+
+.history-empty-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    margin-bottom: 5px;
+    border-radius: 16px;
+    background: var(--blue-light);
+    font-size: 23px;
+}
+
+.history-empty-state strong {
+    color: var(--text);
+    font-size: 15px;
+}
+
+.history-empty-state p {
+    max-width: 270px;
+    margin: 0;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.5;
+}
+/* HOME WEEKLY CHART EMPTY STATE */
+
+.weekly-chart-empty {
+    width: 100%;
+    min-height: 135px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    padding: 20px 12px;
+    text-align: center;
+}
+
+.weekly-chart-empty-icon {
+    font-size: 26px;
+    margin-bottom: 3px;
+}
+
+.weekly-chart-empty strong {
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.weekly-chart-empty p {
+    max-width: 270px;
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.5;
+    opacity: 0.7;
+}
