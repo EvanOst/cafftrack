@@ -3584,7 +3584,7 @@ body.dark-mode #progressPage .progress-card:nth-child(n+2){background:linear-gra
 /* ===== END v142-refinements.css ===== */
 
 /* ===== BEGIN v15-features.css ===== */
-/* CaffTrack v1.5 beta preview — all additions scoped, no data reset */
+/* CaffTrack v1.4 beta preview — all additions scoped, no data reset */
 #homePage .v14-subgreeting{color:var(--blue);font-weight:600;font-size:13px}
 #homePage .encouragement{background:linear-gradient(115deg,#eaf5ee,#e5f2f4 58%,#f4f9fd)!important}
 #homePage .encouragement .eyebrow{color:#4b7b75!important}
@@ -3656,7 +3656,7 @@ body.dark-mode .v15-time-field{background:linear-gradient(140deg,#294459,#263746
 /* ===== END v15-features.css ===== */
 
 /* ===== BEGIN v152-history.css ===== */
-/* v1.5.2: Trend uses the same generated history-fold component as other insights. */
+/* v1.4: Trend uses the same generated history-fold component as other insights. */
 #historyPage #historyTrendSection.history-fold-section { margin-top: 12px; margin-bottom: 12px; }
 #historyPage #historyTrendSection .history-chart-card { border: 0 !important; box-shadow: none !important; background: transparent !important; padding: 4px 0 0 !important; margin: 0 !important; }
 #historyPage #historyTrendSection .history-fold-content { padding: 0 16px 18px; }

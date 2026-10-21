@@ -1,5 +1,5 @@
 
-/* CaffTrack 1.5: optional drink decoration and exact 30-minute time. */
+/* CaffTrack 1.4: optional drink decoration and exact 30-minute time. */
 const V15_COLORS = Object.freeze({blue:'#659fcb',purple:'#a282d2',pink:'#e39ac2',teal:'#59abb0',coral:'#e39b86',gold:'#caa45b'});
 let v15SelectedColors = {log:'blue',savedDrink:'blue',editSavedDrink:'blue',editDrink:'blue'};
 function chooseDrinkColor(form, color) {
@@ -52,7 +52,7 @@ function v15FillLoggerFromDrink(drink){
 function v15ValidateOunces(form){const result=v15Ounces(form);return result!==false;}
 
 const STORAGE_KEY = "caffTrackData";
-const APP_VERSION = "1.5.5 Beta";
+const APP_VERSION = "1.4 Beta";
 const MAX_CAFFEINE_PER_DRINK = 999;
 
 let data = loadData();
