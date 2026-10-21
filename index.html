@@ -1,1859 +1,815 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-
-    <title>CaffTrack</title>
-
-    <meta name="theme-color" content="#3d6f9f">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="CaffTrack">
-
-    <link rel="manifest" href="manifest.json">
-<link rel="stylesheet" href="style.css?v=1.3.4">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<title>CaffTrack</title>
+<meta content="#3d6f9f" name="theme-color"/>
+<meta content="yes" name="apple-mobile-web-app-capable"/>
+<meta content="default" name="apple-mobile-web-app-status-bar-style"/>
+<meta content="CaffTrack" name="apple-mobile-web-app-title"/>
+<link href="manifest.json" rel="manifest"/>
+<link href="style.css?v=1.5.8-calendar-fix" rel="stylesheet"/>
 </head>
-
 <body>
-
 <!-- COMMITMENT / ONBOARDING -->
-<div id="commitmentScreen" class="commitment-screen">
-
-    <div class="commitment-card">
-
-        <div class="commitment-icon">🌱</div>
-
-        <p class="eyebrow">WELCOME TO CAFFTRACK</p>
-
-        <h1>Ready to make a change?</h1>
-
-        <p>
+<div class="commitment-screen" id="commitmentScreen">
+<div class="commitment-card">
+<div class="commitment-icon">🌱</div>
+<p class="eyebrow">WELCOME TO CAFFTRACK</p>
+<h1>Ready to make a change?</h1>
+<p>
             CaffTrack helps you understand your caffeine use,
             track your progress, and work toward becoming
             caffeine-free.
         </p>
-
-        <p>
+<p>
             When you're ready, make your commitment.
             Your journey starts today.
         </p>
-
-        <input
-            id="commitmentName"
-            class="commitment-name-input"
-            type="text"
-            placeholder="What's your name?"
-            maxlength="30"
-            autocomplete="name"
-        >
-
-        <button
-            class="commitment-button"
-            type="button"
-            onclick="commitWithName()"
-        >
+<input autocomplete="name" class="commitment-name-input" id="commitmentName" maxlength="30" placeholder="What's your name?" type="text"/>
+<button class="commitment-button" onclick="commitWithName()" type="button">
             I'm Ready — Commit
         </button>
-
-        <small>
+<small>
             You can still track caffeine after committing.
             One day doesn't erase your progress.
         </small>
-
-    </div>
-
 </div>
-
-
+</div>
 <!-- APP -->
 <div class="app">
-
-    <!-- HOME -->
-    <main id="homePage">
-
-        <header class="topbar">
-
-            <div>
-                <p class="eyebrow">CAFFTRACK</p>
-                <h1 id="greeting">Good morning.</h1>
-            </div>
-
-           <button
-    class="icon-button"
-    type="button"
-    onclick="showPage('settings')"
-    aria-label="Open settings"
->
-    <span
-        class="header-icon"
-        style="--icon: url('images/settings.png');"
-    ></span>
-</button>
-
-        </header>
-
-
-        <section class="encouragement">
-
-            <div class="encouragement-icon">🌱</div>
-
-            <div>
-                <p class="eyebrow">KEEP GOING</p>
-                <h2 id="encouragementText">One day at a time.</h2>
-            </div>
-
-        </section>
-
-
-        <section class="section">
-
-            <p class="eyebrow">YOUR DASHBOARD</p>
-            <h2>Overview</h2>
-
-            <div class="today-card">
-
-                <div class="today-top">
-
-                    <div>
-                        <p class="card-label">TODAY</p>
-
-                        <div class="caffeine-number">
-                            <span id="todayCaffeine">0</span>
-                            <small>mg</small>
-                        </div>
-                    </div>
-
-                    <div class="coffee-icon">
-    <span
-        class="caffeine-icon"
-        style="--icon: url('images/caffeine.png');"
-    ></span>
-</div>
-
-                </div>
-
-                <div class="divider"></div>
-
-                <div class="today-stats">
-
-                    <div>
-                        <strong id="drinkCount">0</strong>
-                        <span>drinks</span>
-                    </div>
-
-                    <div>
-                        <strong id="streak">0</strong>
-                        <span>day streak</span>
-                    </div>
-
-                </div>
-
-            </div>
-
-            <button
-                class="log-button"
-                type="button"
-                onclick="openLogger()"
-            >
-                <span>+</span>
-                Log caffeine
-            </button>
-
-        </section>
-
-
-        <section class="section">
-
-            <div class="section-heading">
-
-                <div>
-                    <p class="eyebrow">LAST 7 DAYS</p>
-                    <h2 id="weeklyTotal">0 mg</h2>
-                </div>
-
-                <span class="muted">Weekly</span>
-
-            </div>
-
-            <div class="card chart-card">
-                <div id="weeklyBars" class="bars"></div>
-            </div>
-
-        </section>
-
-
-        <section class="section">
-
-            <p class="eyebrow">INSIGHTS</p>
-            <h2>Quick Stats</h2>
-
-            <div class="stats-grid">
-
-                <div class="card stat-card">
-
-                    <div class="widget-icon">🌱</div>
-
-                    <p>CAFFEINE-FREE DAYS</p>
-
-                    <h3 id="freeDays">0</h3>
-
-                    <span
-                        id="freeDaysSince"
-                        class="muted"
-                    >
-                        Since today
-                    </span>
-
-                </div>
-
-
-                <div class="card stat-card">
-
-                    <div class="widget-icon">📊</div>
-
-                    <p>THIS WEEK</p>
-
-                    <h3>
-                        <span id="weeklyTotalStats">0</span>
-                        <small>mg</small>
-                    </h3>
-
-                    <span class="muted">
-                        caffeine logged
-                    </span>
-
-                </div>
-
-            </div>
-
-        </section>
-
-    </main>
-
-
-    <!-- HISTORY -->
-<main
-    id="historyPage"
-    class="hidden"
->
-
-    <header class="page-header">
-
-        <p class="eyebrow">YOUR RECORD</p>
-
-        <h1>History</h1>
-
-        <p class="page-description">
+<!-- HOME -->
+<main id="homePage">
+<header class="topbar v14-topbar"><div class="v14-brand-block"><p class="eyebrow">CAFFTRACK <span class="v14-beta">BETA</span></p><h1 id="greeting">Good morning.</h1><p class="v14-subgreeting">A clearer picture of your caffeine habits.</p></div><button aria-label="Open settings" class="icon-button" onclick="showPage('settings')" type="button"><span class="v142-mask-icon v142-header-gear" style='--mask-icon:url("images/settings.png")'></span></button></header>
+<section class="encouragement"><div><p class="eyebrow">KEEP GOING</p><h2 class="v142-encouragement-text" id="encouragementText">One day at a time.</h2></div></section>
+<section class="section v14-home-hero-section"><div class="v14-section-top"><div><p class="eyebrow">YOUR DASHBOARD</p><h2>Overview<span class="v14-title-dot">.</span></h2></div><span class="v14-section-aside">TODAY</span></div>
+<div class="today-card"><div class="v14-hero-top"><span class="v14-hero-kicker">TODAY'S CAFFEINE</span><span class="v14-hero-icon v142-hero-energy" style='--mask-icon:url("images/caffeine.png")'><i class="v142-mask-icon"></i></span></div><div class="caffeine-number"><span id="todayCaffeine">0</span><small>mg</small></div><p class="v14-hero-caption">Caffeine logged so far today</p><div class="today-stats"><div class="v14-mini-stat"><span class="v14-stat-icon v142-stat-outline" style='--mask-icon:url("images/caffeine.png")'><i class="v142-mask-icon"></i></span><div><strong id="drinkCount">0</strong><span>drinks logged</span></div></div><div class="v14-mini-stat"><span class="v14-stat-icon v142-stat-outline" style='--mask-icon:url("images/history.png")'><i class="v142-mask-icon"></i></span><div><strong id="streak">0</strong><span>day streak</span></div></div></div></div>
+<button class="log-button" onclick="openLogger()" type="button"><span class="v14-plus">＋</span> Log caffeine <span class="v14-log-arrow">↗</span></button></section>
+<section class="section v14-chart-section"><div class="section-heading"><div><p class="eyebrow">LAST 7 DAYS</p><h2 id="weeklyTotal">0 mg</h2></div><span class="v14-chart-pill">Weekly overview</span></div><div class="card chart-card"><div class="v14-chart-intro">Your caffeine, day by day</div><div aria-label="Caffeine logged over the last seven days" class="bars" id="weeklyBars"></div></div></section>
+<section class="section v14-insights-section"><p class="eyebrow">INSIGHTS</p><h2>Quick Stats</h2><div class="stats-grid"><div class="card stat-card v15-blue-stat"><div class="widget-icon v142-stat-symbol" style='--mask-icon:url("images/history.png")'><i class="v142-mask-icon"></i></div><p>CAFFEINE-FREE DAYS</p><h3 id="freeDays">0</h3><span class="muted" id="freeDaysSince">Since today</span></div><div class="card stat-card"><div class="widget-icon v142-stat-symbol" style='--mask-icon:url("images/stats.png")'><i class="v142-mask-icon"></i></div><p>THIS MONTH</p><h3><span id="homeMonthlyTotal">0</span><small>mg</small></h3><span class="muted">caffeine logged this month</span></div><div class="card stat-card v142-stat-new"><div class="widget-icon v142-stat-symbol">↗</div><p>7-DAY AVERAGE</p><h3><span id="homeSevenDayAverage">0</span><small>mg/day</small></h3><span class="muted">over the last 7 days</span></div><div class="card stat-card v142-stat-new v142-latest v15-blue-stat" onclick="showPage('history')" onkeydown="if(event.key==='Enter')showPage('history')" role="button" tabindex="0"><div class="widget-icon v142-stat-symbol">◷</div><p>LAST LOGGED</p><h3 id="homeLastDrink">—</h3><span class="muted" id="homeLastDrinkDetail">No drinks yet</span></div></div></section>
+</main>
+<!-- HISTORY -->
+<main class="hidden" id="historyPage">
+<header class="page-header v14-page-header">
+<p class="eyebrow">YOUR RECORD</p>
+<h1>History</h1>
+<p class="page-description">
             See how your caffeine use has changed over time.
         </p>
-
-    </header>
-
-
-    <!-- HISTORY RANGE -->
-    <div class="history-range">
-
-        <button
-            class="history-range-button active"
-            type="button"
-            data-range="week"
-            onclick="setHistoryRange('week')"
-        >
+<div class="v14-header-rule"></div></header>
+<!-- HISTORY RANGE -->
+<div class="history-range">
+<button class="history-range-button active" data-range="week" onclick="setHistoryRange('week')" type="button">
             Week
         </button>
-
-        <button
-            class="history-range-button"
-            type="button"
-            data-range="month"
-            onclick="setHistoryRange('month')"
-        >
+<button class="history-range-button" data-range="month" onclick="setHistoryRange('month')" type="button">
             Month
         </button>
-
-<button
-    class="history-range-button"
-    type="button"
-    data-range="year"
-    onclick="setHistoryRange('year')"
->
+<button class="history-range-button" data-range="year" onclick="setHistoryRange('year')" type="button">
     Year
 </button>
-
-        <button
-            class="history-range-button"
-            type="button"
-            data-range="all"
-            onclick="setHistoryRange('all')"
-        >
+<button class="history-range-button" data-range="all" onclick="setHistoryRange('all')" type="button">
             All Time
         </button>
-
-    </div>
-
-
-    <!-- HISTORY SUMMARY -->
-    <div class="history-insights-card">
-
-        <div class="history-total">
-
-            <span
-                id="historyRangeLabel"
-                class="history-stat-label"
-            >
+</div>
+<!-- HISTORY SUMMARY -->
+<div class="history-insights-card v142-history-summary"><span aria-hidden="true" class="v15-history-mark"><i class="v142-mask-icon" style="--mask-icon:url('images/history.png')"></i></span>
+<div class="history-total">
+<span class="history-stat-label" id="historyRangeLabel">
                 LAST 7 DAYS
             </span>
-
-            <div class="history-total-number">
-                <strong id="historyRangeTotal">0</strong>
-                <span>mg</span>
-            </div>
-
-            <small id="historyComparison">
+<div class="history-total-number">
+<strong id="historyRangeTotal">0</strong>
+<span>mg</span>
+</div>
+<small id="historyComparison">
                 —
             </small>
-
-        </div>
-
-
-        <div class="history-stat-grid">
-
-            <div>
-
-                <span class="history-stat-label">
+</div>
+<div class="history-stat-grid">
+<div>
+<span class="history-stat-label">
                     DAILY AVG
                 </span>
-
-                <strong>
-                    <span id="historyRangeAverage">0</span>
-                    <small>mg</small>
-                </strong>
-
-            </div>
-
-
-            <div>
-
-                <span class="history-stat-label">
+<strong>
+<span id="historyRangeAverage">0</span>
+<small>mg</small>
+</strong>
+</div>
+<div>
+<span class="history-stat-label">
                     CAFFEINE-FREE
                 </span>
-
-                <strong>
-                    <span id="historyRangeFreeDays">0</span>
-                    <small>days</small>
-                </strong>
-
-            </div>
-
-        </div>
-
-    </div>
-
+<strong>
+<span id="historyRangeFreeDays">0</span>
+<small>days</small>
+</strong>
+</div>
+</div>
+</div>
 <!-- INSIGHTS SUMMARY -->
 <section class="section insights-summary-section">
-    <p class="eyebrow">YOUR CAFFEINE PATTERNS</p>
-    <h2>At a Glance</h2>
-
-    <div class="insights-summary-grid">
-        <div class="card insights-summary-item">
-            <span class="insights-summary-icon">☕</span>
-            <small>FAVORITE DRINK</small>
-            <strong id="insightFavoriteDrink">—</strong>
-            <span id="insightFavoriteDetail">No drinks yet</span>
-        </div>
-
-        <div class="card insights-summary-item">
-            <span class="insights-summary-icon">📅</span>
-            <small>PEAK CAFFEINE DAY</small>
-            <strong id="insightPeakDay">—</strong>
-            <span id="insightPeakDayDetail">No data yet</span>
-        </div>
-
-        <div class="card insights-summary-item">
-            <span class="insights-summary-icon">🕒</span>
-            <small>MOST COMMON TIME</small>
-            <strong id="insightCommonTime">—</strong>
-            <span id="insightCommonTimeDetail">No data yet</span>
-        </div>
-    </div>
+<p class="eyebrow">YOUR CAFFEINE PATTERNS</p>
+<h2>At a Glance</h2>
+<div class="insights-summary-grid">
+<div class="card insights-summary-item">
+<small>FAVORITE DRINK</small>
+<strong id="insightFavoriteDrink">—</strong>
+<span id="insightFavoriteDetail">No drinks yet</span>
+</div>
+<div class="card insights-summary-item">
+<small>PEAK CAFFEINE DAY</small>
+<strong id="insightPeakDay">—</strong>
+<span id="insightPeakDayDetail">No data yet</span>
+</div>
+<div class="card insights-summary-item">
+<small>MOST COMMON TIME</small>
+<strong id="insightCommonTime">—</strong>
+<span id="insightCommonTimeDetail">No data yet</span>
+</div>
+</div>
 </section>
-
-  <!-- HISTORY TREND -->
-<div class="history-trend-toggle">
-
-    <button
-        id="historyTrendButton"
-        class="history-trend-button"
-        type="button"
-        onclick="toggleHistoryTrend()"
-    >
-        <span>See Trend</span>
-        <span id="historyTrendArrow">↓</span>
-    </button>
-
-</div>
-
-
-<div
-    id="historyTrendPanel"
-    class="history-trend-panel hidden"
->
-
-    <div class="section-heading">
-
-        <div>
-            <p class="eyebrow">CAFFEINE TREND</p>
-
-            <h2 id="historyTrendTitle">
-                Last 7 days
-            </h2>
-        </div>
-
-    </div>
-
-    <div class="card history-chart-card">
-
-        <div
-            id="historyChart"
-            class="history-chart"
-        ></div>
-
-    </div>
-
-</div>
-
-
-    <!-- PAST DATE LOGGING -->
+<!-- HISTORY TREND -->
+<!-- PAST DATE LOGGING -->
 <div class="past-log-button">
-
-    <span class="past-log-icon">📅</span>
-
-    <span class="past-log-text">
-        <strong>Forgot to log something?</strong>
-        <small>Choose a date below</small>
-    </span>
-
-    <div class="past-date-row">
-
-        <label for="pastDrinkDate" class="past-date-label">
-            <span>📅 Select a date</span>
-            <span class="past-date-hint">Tap to choose ↓</span>
-        </label>
-
-        <input
-            id="pastDrinkDate"
-            class="past-date-picker"
-            type="date"
-            aria-label="Select a date to log caffeine"
-        >
-
-        <button
-            type="button"
-            class="past-date-button"
-            onclick="pastDateSelected()"
-        >
+<span class="past-log-text">
+<strong>Forgot to log something?</strong>
+<small>Choose the day you want to log</small>
+</span>
+<div class="past-date-row">
+<input aria-label="Date for caffeine log" class="past-date-picker" id="pastDrinkDate" title="Choose the date for your caffeine log" type="date"/>
+<button class="past-date-button" onclick="pastDateSelected()" type="button">
             Log
         </button>
-
-    </div>
-
 </div>
-
+</div><section class="section" id="historyTrendSection"><div class="card history-chart-card"><div class="history-chart" id="historyChart"></div></div></section>
 <!-- DAY OF WEEK INSIGHTS -->
 <section class="section">
-    <p class="eyebrow">WEEKLY HABITS</p>
-    <h2>Day of the Week</h2>
-
-    <div class="card weekday-insights-card">
-        <div class="drink-insights-toggle">
-            <button type="button"
-                class="weekday-insights-mode active"
-                data-mode="caffeine"
-                onclick="setWeekdayInsightsMode('caffeine')">
+<p class="eyebrow">WEEKLY HABITS</p>
+<h2>Day of the Week</h2>
+<div class="card weekday-insights-card">
+<div class="drink-insights-toggle">
+<button class="weekday-insights-mode active" data-mode="caffeine" onclick="setWeekdayInsightsMode('caffeine')" type="button">
                 Avg. Caffeine
             </button>
-
-            <button type="button"
-                class="weekday-insights-mode"
-                data-mode="count"
-                onclick="setWeekdayInsightsMode('count')">
+<button class="weekday-insights-mode" data-mode="count" onclick="setWeekdayInsightsMode('count')" type="button">
                 Drinks Logged
             </button>
-        </div>
-
-        <div id="weekdayInsights"></div>
-    </div>
+</div>
+<div id="weekdayInsights"></div>
+</div>
 </section>
-
-    <!-- TIME OF DAY INSIGHTS -->
+<!-- TIME OF DAY INSIGHTS -->
 <section class="section">
-    <p class="eyebrow">CAFFEINE HABITS</p>
-    <h2>Time of Day</h2>
-
-    <div class="card time-insights-card">
-
-        <div class="drink-insights-toggle">
-            <button
-                type="button"
-                class="time-insights-mode active"
-                data-mode="count"
-                onclick="setTimeInsightsMode('count')"
-            >
+<p class="eyebrow">CAFFEINE HABITS</p>
+<h2>Time of Day</h2>
+<div class="card time-insights-card">
+<div class="drink-insights-toggle">
+<button class="time-insights-mode active" data-mode="count" onclick="setTimeInsightsMode('count')" type="button">
                 Drinks
             </button>
-
-            <button
-                type="button"
-                class="time-insights-mode"
-                data-mode="caffeine"
-                onclick="setTimeInsightsMode('caffeine')"
-            >
+<button class="time-insights-mode" data-mode="caffeine" onclick="setTimeInsightsMode('caffeine')" type="button">
                 Caffeine (mg)
             </button>
-        </div>
-
-        <div id="timeOfDayInsights"></div>
-
-    </div>
+</div>
+<div id="timeOfDayInsights"></div>
+</div>
 </section>
-
 <!-- MOST LOGGED DRINKS -->
 <section class="section">
-    <p class="eyebrow">DRINK INSIGHTS</p>
-    <h2>Most Logged Drinks</h2>
-
-    <div class="card drink-insights-card">
-        <div class="drink-insights-toggle">
-            <button
-                type="button"
-                class="drink-insights-mode active"
-                data-mode="count"
-                onclick="setDrinkInsightsMode('count')"
-            >
+<p class="eyebrow">DRINK INSIGHTS</p>
+<h2>Most Logged Drinks</h2>
+<div class="card drink-insights-card">
+<div class="drink-insights-toggle">
+<button class="drink-insights-mode active" data-mode="count" onclick="setDrinkInsightsMode('count')" type="button">
                 Times Logged
             </button>
-
-            <button
-                type="button"
-                class="drink-insights-mode"
-                data-mode="caffeine"
-                onclick="setDrinkInsightsMode('caffeine')"
-            >
+<button class="drink-insights-mode" data-mode="caffeine" onclick="setDrinkInsightsMode('caffeine')" type="button">
                 Total Caffeine
             </button>
-        </div>
-
-        <div id="mostLoggedDrinks"></div>
-    </div>
+</div>
+<div id="mostLoggedDrinks"></div>
+</div>
 </section>
-
-    <!-- HISTORY ENTRIES -->
-    <section class="section">
-
-        <div class="section-heading">
-
-            <div>
-                <p class="eyebrow">LOGGED DRINKS</p>
-                <h2 id="historyEntriesTitle">
+<!-- HISTORY ENTRIES -->
+<section class="section">
+<div class="section-heading">
+<div>
+<p class="eyebrow">LOGGED DRINKS</p>
+<h2 id="historyEntriesTitle">
                     Last 7 days
                 </h2>
-            </div>
-
-        </div>
-
-        <div id="historyList"></div>
-
-    </section>
-
+</div>
+</div>
+<div id="historyList"></div>
+</section>
 </main>
-
-
-    <!-- PROGRESS -->
-    <main
-        id="progressPage"
-        class="hidden"
-    >
-
-        <header class="page-header">
-
-            <p class="eyebrow">KEEP GOING</p>
-
-            <h1>Progress</h1>
-
-            <p class="page-description">
+<!-- PROGRESS -->
+<main class="hidden" id="progressPage">
+<header class="page-header v14-page-header">
+<p class="eyebrow">KEEP GOING</p>
+<h1>Progress</h1>
+<p class="page-description">
                 Your progress is built one day at a time.
             </p>
-
-        </header>
-
-
-        <div class="progress-grid">
-
-            <div class="card progress-card">
-
-                <span>🔥</span>
-
-                <small>
+<div class="v14-header-rule"></div></header>
+<div class="progress-grid">
+<div class="card progress-card">
+<span>🔥</span>
+<small>
                     CURRENT STREAK
                 </small>
-
-                <strong id="progressStreak">
+<strong id="progressStreak">
                     0
                 </strong>
-
-                <p>days</p>
-
-            </div>
-
-
-            <div class="card progress-card">
-
-    <span>📅</span>
-
-    <small>
+<p>days</p>
+</div>
+<div class="card progress-card">
+<span>📅</span>
+<small>
         SINCE COMMITMENT
     </small>
-
-    <strong id="daysSinceCommitment">
+<strong id="daysSinceCommitment">
         0
     </strong>
-
-    <p id="progressCommitmentDate">
+<p id="progressCommitmentDate">
         —
     </p>
-
 </div>
-
-
-            <div class="card progress-card">
-
-                <span>🌱</span>
-
-                <small>
+<div class="card progress-card">
+<span>🌱</span>
+<small>
                     FREE DAYS
                 </small>
-
-                <strong id="progressFreeDays">
+<strong id="progressFreeDays">
                     0
                 </strong>
-
-                <p>total</p>
-
-            </div>
-
-
-            <div class="card progress-card">
-
-                <span>📊</span>
-
-                <small>
+<p>total</p>
+</div>
+<div class="card progress-card">
+<span>📊</span>
+<small>
                     7-DAY AVERAGE
                 </small>
-
-                <strong id="weeklyAverage">
+<strong id="weeklyAverage">
                     0
                 </strong>
-
-                <p>mg/day</p>
-
-            </div>
-
-
-            <div class="card progress-card">
-
-                <span>☕</span>
-
-                <small>
+<p>mg/day</p>
+</div>
+<div class="card progress-card">
+<span>☕</span>
+<small>
                     TOTAL LOGGED
                 </small>
-
-                <strong id="totalLogged">
+<strong id="totalLogged">
                     0
                 </strong>
-
-                <p>mg</p>
-
-            </div>
-
-
-            <div class="card progress-card">
-
-                <span>📉</span>
-
-                <small>
+<p>mg</p>
+</div>
+<div class="card progress-card">
+<span>📉</span>
+<small>
                     WEEKLY CHANGE
                 </small>
-
-                <strong id="weeklyChange">
+<strong id="weeklyChange">
                     —
                 </strong>
-
-                <p>
+<p>
                     vs previous week
                 </p>
-
-            </div>
-
-        </div>
-
-
-        <!-- ACHIEVEMENTS -->
+</div>
+</div>
+<!-- ACHIEVEMENTS -->
 <section class="section achievements-section">
-
-    <p class="eyebrow">
+<p class="eyebrow">
         ACHIEVEMENTS
     </p>
-
-    <h2>Your progress</h2>
-
-
-    <div class="achievements-card">
-
-        <!-- PERSONAL RECORDS -->
-        <div class="achievements-group">
-
-            <p class="achievements-label">
+<h2>Personal Bests</h2>
+<div class="achievements-card">
+<!-- PERSONAL RECORDS -->
+<div class="achievements-group">
+<p class="achievements-label">
                 PERSONAL RECORDS
             </p>
-
-
-            <div class="personal-record">
-
-                <div class="personal-record-icon">
+<div class="personal-record">
+<div class="personal-record-icon">
                     🏆
                 </div>
-
-                <div class="personal-record-info">
-
-                    <small>
+<div class="personal-record-info">
+<small>
                         Longest caffeine-free streak
                     </small>
-
-                    <strong>
-                        <span id="recordLongestStreak">
+<strong>
+<span id="recordLongestStreak">
                             —
                         </span>
                         days
                     </strong>
-
-                </div>
-
-            </div>
-
-
-            <div class="personal-record">
-
-                <div class="personal-record-icon">
+</div>
+</div>
+<div class="personal-record">
+<div class="personal-record-icon">
                     📉
                 </div>
-
-                <div class="personal-record-info">
-
-                    <small>
+<div class="personal-record-info">
+<small>
                         Lowest 7-day average
                     </small>
-
-                    <strong>
-                        <span id="recordLowest7">
+<strong>
+<span id="recordLowest7">
                             —
                         </span>
                         mg/day
                     </strong>
-
-                </div>
-
-            </div>
-
-
-            <div class="personal-record">
-
-                <div class="personal-record-icon">
+</div>
+</div>
+<div class="personal-record">
+<div class="personal-record-icon">
                     📆
                 </div>
-
-                <div class="personal-record-info">
-
-                    <small>
+<div class="personal-record-info">
+<small>
                         Lowest 30-day average
                     </small>
-
-                    <strong>
-                        <span id="recordLowest30">
+<strong>
+<span id="recordLowest30">
                             —
                         </span>
                         mg/day
                     </strong>
-
-                </div>
-
-            </div>
-
-
-            <div class="personal-record">
-
-                <div class="personal-record-icon">
+</div>
+</div>
+<div class="personal-record">
+<div class="personal-record-icon">
                     🌱
                 </div>
-
-                <div class="personal-record-info">
-
-                    <small>
+<div class="personal-record-info">
+<small>
                         Most caffeine-free days in 30 days
                     </small>
-
-                    <strong>
-                        <span id="recordMostFreeDays">
+<strong>
+<span id="recordMostFreeDays">
                             —
                         </span>
                         days
                     </strong>
-
-                </div>
-
-            </div>
-
-
-            <div class="personal-record">
-
-                <div class="personal-record-icon">
+</div>
+</div>
+<div class="personal-record">
+<div class="personal-record-icon">
                     ⚡
                 </div>
-
-                <div class="personal-record-info">
-
-                    <small>
+<div class="personal-record-info">
+<small>
                         Biggest 7-day reduction
                     </small>
-
-                    <strong>
-                        <span id="recordBiggestReduction">
+<strong>
+<span id="recordBiggestReduction">
                             —
                         </span>
                         mg
                     </strong>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- MILESTONES -->
-        <div class="achievements-group milestones-group">
-
-            <p class="achievements-label">
+</div>
+</div>
+</div>
+<!-- MILESTONES -->
+<div class="achievements-group milestones-group">
+<p class="achievements-label">
                 MILESTONES
             </p>
-
-            <div id="milestones"></div>
-
-        </div>
-
-    </div>
-
+<div id="milestones"></div>
+</div>
+</div>
 </section>
-
-    </main>
-
-        <!-- MY DRINKS -->
-    <main
-        id="drinksPage"
-        class="hidden"
-    >
-
-        <header class="page-header">
-
-            <p class="eyebrow">YOUR LIBRARY</p>
-
-            <h1>My Drinks</h1>
-
-            <p class="page-description">
+</main>
+<!-- MY DRINKS -->
+<main class="hidden" id="drinksPage">
+<header class="page-header v14-page-header">
+<p class="eyebrow">YOUR LIBRARY</p>
+<h1>My Drinks</h1>
+<p class="page-description">
                 Save your usual drinks for faster logging.
             </p>
-
-        </header>
-
-
-        <div class="my-drinks-toolbar">
-
-            <div class="my-drinks-search-wrap">
-
-                <input
-                    id="myDrinksSearch"
-                    class="my-drinks-search"
-                    type="text"
-                    placeholder="Search My Drinks"
-                    autocomplete="off"
-                    oninput="renderMyDrinks()"
-                >
-
-            </div>
-
-            <button
-                class="my-drinks-add-button"
-                type="button"
-                onclick="openNewSavedDrink()"
-            >
+<div class="v14-header-rule"></div></header>
+<div class="my-drinks-toolbar">
+<div class="my-drinks-search-wrap">
+<input autocomplete="off" class="my-drinks-search" id="myDrinksSearch" oninput="renderMyDrinks()" placeholder="Search My Drinks" type="text"/>
+</div>
+<button class="my-drinks-add-button" onclick="openNewSavedDrink()" type="button">
                 +
             </button>
-
-        </div>
-
-
-        <div class="my-drinks-sort">
-
-            <button
-                class="my-drinks-sort-button active"
-                type="button"
-                data-sort="recent"
-                onclick="setMyDrinksSort('recent')"
-            >
+</div>
+<div class="my-drinks-sort">
+<button class="my-drinks-sort-button active" data-sort="recent" onclick="setMyDrinksSort('recent')" type="button">
                 Recent
             </button>
-
-            <button
-                class="my-drinks-sort-button"
-                type="button"
-                data-sort="used"
-                onclick="setMyDrinksSort('used')"
-            >
+<button class="my-drinks-sort-button" data-sort="used" onclick="setMyDrinksSort('used')" type="button">
                 Most Used
             </button>
-
-            <button
-                class="my-drinks-sort-button"
-                type="button"
-                data-sort="az"
-                onclick="setMyDrinksSort('az')"
-            >
+<button class="my-drinks-sort-button" data-sort="az" onclick="setMyDrinksSort('az')" type="button">
                 A–Z
             </button>
-
-        </div>
-
-
-        <div id="myDrinksList"></div>
-
-    </main>
-
-
-    <!-- SETTINGS -->
-<main
-    id="settingsPage"
-    class="hidden"
->
-
-    <header class="page-header">
-
-        <p class="eyebrow">
+</div>
+<div id="myDrinksList"></div>
+</main>
+<!-- SETTINGS -->
+<main class="hidden" id="settingsPage">
+<header class="page-header v14-page-header">
+<p class="eyebrow">
             CUSTOMIZE
         </p>
-
-        <h1>Settings</h1>
-
-        <p class="page-description">
+<h1>Settings</h1>
+<p class="page-description">
             Manage your CaffTrack data.
         </p>
-
-    </header>
-
-
-    <div class="settings-card">
-
-        <!-- YOUR NAME -->
-        <div class="setting">
-
-            <div>
-                <strong>Your Name</strong>
-
-                <small>
+<div class="v14-header-rule"></div></header>
+<div class="settings-card">
+<!-- YOUR NAME -->
+<div class="setting">
+<div>
+<strong>Your Name</strong>
+<small>
                     Personalize your CaffTrack experience.
                 </small>
-            </div>
-
-            <input
-                id="nameInput"
-                type="text"
-                placeholder="Your name"
-                maxlength="30"
-                onchange="saveName(this.value)"
-            >
-
-        </div>
-
-
-        <!-- APPEARANCE -->
-        <div class="setting">
-
-            <div>
-                <strong>Appearance</strong>
-
-                <small>
+</div>
+<input id="nameInput" maxlength="30" onchange="saveName(this.value)" placeholder="Your name" type="text"/>
+</div>
+<!-- APPEARANCE -->
+<div class="setting">
+<div>
+<strong>Appearance</strong>
+<small>
                     Choose how CaffTrack looks.
                 </small>
-            </div>
-
-            <select
-                id="appearanceSelect"
-                onchange="changeAppearance(this.value)"
-            >
-                <option value="system">
+</div>
+<select id="appearanceSelect" onchange="changeAppearance(this.value)">
+<option value="system">
                     System
                 </option>
-
-                <option value="light">
+<option value="light">
                     Light
                 </option>
-
-                <option value="dark">
+<option value="dark">
                     Dark
                 </option>
-            </select>
-
-        </div>
-
-
-        <!-- COMMITMENT DATE -->
-        <div class="setting">
-
-            <div>
-                <strong>
+</select>
+</div>
+<!-- COMMITMENT DATE -->
+<div class="setting">
+<div>
+<strong>
                     Commitment Date
                 </strong>
-
-                <small>
+<small>
                     The day your caffeine-free journey began.
                 </small>
-            </div>
-
-            <strong
-                id="commitmentDateDisplay"
-                class="commitment-date-display"
-            >
+</div>
+<strong class="commitment-date-display" id="commitmentDateDisplay">
                 —
             </strong>
-
-        </div>
-
-
-        <!-- EXPORT DATA -->
-        <div class="setting">
-
-            <div>
-                <strong>
+</div>
+<!-- EXPORT DATA -->
+<div class="setting">
+<div>
+<strong>
                     Export data
                 </strong>
-
-                <small>
+<small>
                     Download a backup of your data.
                 </small>
-            </div>
-
-            <button
-                type="button"
-                onclick="exportData()"
-            >
+</div>
+<button onclick="exportData()" type="button">
                 Export
             </button>
-
-        </div>
-
-
-        <!-- IMPORT DATA -->
-        <div class="setting">
-
-            <div>
-                <strong>
+</div>
+<!-- IMPORT DATA -->
+<div class="setting">
+<div>
+<strong>
                     Import data
                 </strong>
-
-                <small>
+<small>
                     Restore a previous backup.
                 </small>
-            </div>
-
-            <label class="button">
+</div>
+<label class="button">
 
                 Import
 
-                <input
-                    type="file"
-                    accept=".json"
-                    onchange="importData(this.files[0]); this.value='';"
-                >
-
-            </label>
-
-        </div>
-
-
-        <!-- RESET CAFFTRACK -->
-        <div class="setting">
-
-            <div>
-                <strong>
+                <input accept=".json" onchange="importData(this.files[0]); this.value='';" type="file"/>
+</label>
+</div>
+<!-- RESET CAFFTRACK -->
+<div class="setting">
+<div>
+<strong>
                     Reset CaffTrack
                 </strong>
-
-                <small>
+<small>
                     Erase all saved data.
                 </small>
-            </div>
-
-            <button
-                class="danger"
-                type="button"
-                onclick="openResetModal()"
-            >
+</div>
+<button class="danger" onclick="openResetModal()" type="button">
                 Reset
             </button>
-
-           </div>
-
-        <!-- HELP & FEEDBACK -->
-        <div class="setting">
-
-            <div>
-                <strong>
+</div>
+<!-- HELP & FEEDBACK -->
+<div class="setting">
+<div>
+<strong>
                     Help Improve CaffTrack
                 </strong>
-
-                <small>
+<small>
                     Found a bug or have an idea? Let us know.
                 </small>
-            </div>
-
-            <a
-                href="https://tally.so/r/KpYxaM"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="button"
-            >
+</div>
+<a class="button" href="https://tally.so/r/KpYxaM" rel="noopener noreferrer" target="_blank">
                 Feedback ↗
             </a>
-
-        </div>
-
-    </div>
-
-
-    <div class="app-version">
-        CaffTrack · v1.3.4 Beta
-    </div>
-
+</div>
+</div>
+<div class="app-version">CaffTrack · v1.5.2 Beta</div>
 </main>
-
 <!-- BOTTOM NAV -->
 <nav class="bottom-nav">
-
-    <button
-        class="nav-item active"
-        type="button"
-        onclick="showPage('home')"
-    >
-        <span
-            class="nav-icon"
-            style="--icon: url('images/home.png');"
-        ></span>
-        <small>Home</small>
-    </button>
-
-    <button
-        class="nav-item"
-        type="button"
-        onclick="showPage('history')"
-    >
-        <span
-            class="nav-icon"
-            style="--icon: url('images/history.png');"
-        ></span>
-        <small>History</small>
-    </button>
-
-    <button
-        class="nav-item"
-        type="button"
-        onclick="showPage('drinks')"
-    >
-       <span
-    class="nav-icon"
-    style="--icon: url('images/mydrinks.png');"
-></span>
+<button class="nav-item active" onclick="showPage('home')" type="button">
+<span class="nav-icon"><span class="v142-mask-icon" style='--mask-icon:url("images/home.png")'></span></span>
+<small>Home</small>
+</button>
+<button class="nav-item" onclick="showPage('history')" type="button">
+<span class="nav-icon"><span class="v142-mask-icon" style='--mask-icon:url("images/history.png")'></span></span>
+<small>History</small>
+</button>
+<button class="nav-item" onclick="showPage('drinks')" type="button">
+<span class="nav-icon"><span class="v142-mask-icon" style='--mask-icon:url("images/mydrinks.png")'></span></span>
 <small>My Drinks</small>
-    </button>
-
-    <button
-        class="nav-item"
-        type="button"
-        onclick="showPage('progress')"
-    >
-        <span
-            class="nav-icon"
-            style="--icon: url('images/progress.png');"
-        ></span>
-        <small>Progress</small>
-    </button>
-
-    <button
-        class="nav-item"
-        type="button"
-        onclick="showPage('settings')"
-    >
-        <span
-            class="nav-icon"
-            style="--icon: url('images/settings.png');"
-        ></span>
-        <small>Settings</small>
-    </button>
-
+</button>
+<button class="nav-item" onclick="showPage('progress')" type="button">
+<span class="nav-icon"><span class="v142-mask-icon" style='--mask-icon:url("images/progress.png")'></span></span>
+<small>Progress</small>
+</button>
+<button class="nav-item" onclick="showPage('settings')" type="button">
+<span class="nav-icon"><span class="v142-mask-icon" style='--mask-icon:url("images/settings.png")'></span></span>
+<small>Settings</small>
+</button>
 </nav>
-
 <!-- RESET MODAL -->
-<div
-    id="resetModal"
-    class="overlay"
->
-    <div class="modal reset-modal">
-
-        <button
-            class="close-button"
-            type="button"
-            onclick="closeResetModal()"
-        >
+<div class="overlay" id="resetModal">
+<div class="modal reset-modal">
+<button class="close-button" onclick="closeResetModal()" type="button">
             ×
         </button>
-
-        <p class="eyebrow">
+<p class="eyebrow">
             RESET CAFFTRACK
         </p>
-
-        <h2>
+<h2>
             Are you sure?
         </h2>
-
-        <p class="modal-subtitle">
+<p class="modal-subtitle">
             This will erase your caffeine history,
             streaks, progress, and commitment.
         </p>
-
-        <label class="reset-drinks-option">
-
-            <input
-                id="resetMyDrinks"
-                type="checkbox"
-            >
-
-            <span>
+<label class="reset-drinks-option">
+<input id="resetMyDrinks" type="checkbox"/>
+<span>
                 Reset My Drinks
             </span>
-
-        </label>
-
-        <div class="reset-modal-actions">
-
-            <button
-                class="reset-cancel-button"
-                type="button"
-                onclick="closeResetModal()"
-            >
+</label>
+<div class="reset-modal-actions">
+<button class="reset-cancel-button" onclick="closeResetModal()" type="button">
                 Cancel
             </button>
-
-            <button
-                class="reset-confirm-button"
-                type="button"
-                onclick="confirmResetData()"
-            >
+<button class="reset-confirm-button" onclick="confirmResetData()" type="button">
                 Reset CaffTrack
             </button>
-
-        </div>
-
-    </div>
 </div>
-
+</div>
+</div>
 <!-- LOG MODAL -->
-<div
-    id="logger"
-    class="overlay"
->
-
-    <div class="modal">
-
-        <button
-            class="close-button"
-            type="button"
-            onclick="closeLogger()"
-        >
+<div class="overlay" id="logger">
+<div class="modal">
+<button class="close-button" onclick="closeLogger()" type="button">
             ×
         </button>
-
-
-        <div class="modal-icon">
+<div class="modal-icon">
             ☕
         </div>
-
-
-        <p class="eyebrow">
+<p class="eyebrow">
             LOG CAFFEINE
         </p>
-
-
-        <h2>
+<h2>
             What did you have?
         </h2>
-
-
-        <p class="modal-subtitle">
+<p class="modal-subtitle">
             Add the drink name and caffeine amount.
         </p>
-
-
-        <label class="logger-label">
+<label class="logger-label">
             Date
         </label>
-
-        <input
-            id="drinkDate"
-            class="text-input"
-            type="date"
-        >
-
-
-        <label class="logger-label">
+<input class="text-input" id="drinkDate" type="date"/>
+<label class="logger-label">
             Time of day
         </label>
-
-
-        <div class="time-of-day-grid">
-
-            <button
-                type="button"
-                class="time-button"
-                data-time="morning"
-                onclick="selectTimeOfDay('morning')"
-            >
-                ☀️ Morning
-            </button>
-
-
-            <button
-                type="button"
-                class="time-button"
-                data-time="afternoon"
-                onclick="selectTimeOfDay('afternoon')"
-            >
-                🌤️ Afternoon
-            </button>
-
-
-            <button
-                type="button"
-                class="time-button"
-                data-time="night"
-                onclick="selectTimeOfDay('night')"
-            >
-                🌙 Night
-            </button>
-
-        </div>
-
-
-    <div class="drink-picker">
-
-        
-
-    <input
-        id="drinkName"
-        class="text-input drink-name-input"
-        type="text"
-        placeholder="Drink name"
-        autocomplete="off"
-        onfocus="showDrinkSuggestions()"
-        oninput="showDrinkSuggestions()"
-    >
-
-    <div
-        id="drinkSuggestions"
-        class="drink-suggestions hidden"
-    ></div>
-
-</div>
-
-
+<div class="v15-time-field"><div class="v15-time-top"><label for="logClock">Time consumed</label><output for="logClock" id="logTimeLabel">12:00 PM</output></div><input aria-label="Time consumed in 30-minute increments" class="v15-time-range" id="logClock" max="47" min="0" oninput="updateClockLabel('log')" step="1" type="range" value="24"/><div class="v15-time-ticks"><span>12 AM</span><span>6 AM</span><span>12 PM</span><span>6 PM</span><span>12 AM</span></div><p class="v15-time-help">Adjust in 30-minute steps</p></div>
+<div class="drink-picker">
+<input autocomplete="off" class="text-input drink-name-input" id="drinkName" onfocus="showDrinkSuggestions()" oninput="showDrinkSuggestions()" placeholder="Drink name" type="text"/>
+<div class="drink-suggestions hidden" id="drinkSuggestions"></div>
+</div><div class="flavor-field" data-flavor-field="logFlavor"><label class="logger-label" for="logFlavor">Flavor <small>(optional, just for this log)</small></label><input aria-autocomplete="list" aria-controls="logFlavorSuggestions" aria-expanded="false" autocomplete="off" class="text-input flavor-input" id="logFlavor" maxlength="60" onfocus="showFlavorSuggestions('logFlavor')" oninput="showFlavorSuggestions('logFlavor')" placeholder="e.g. Cotton Candy" spellcheck="false" type="text"/><div class="flavor-suggestions hidden" id="logFlavorSuggestions" role="listbox"></div></div>
 <!-- SAVE TO MY DRINKS -->
-<div
-    id="saveToMyDrinksOption"
-    class="save-to-my-drinks hidden"
->
-    <label>
-
-        <input
-            id="saveToMyDrinks"
-            type="checkbox"
-        >
-
-        <span>
+<div class="save-to-my-drinks hidden" id="saveToMyDrinksOption">
+<label>
+<input id="saveToMyDrinks" type="checkbox"/>
+<span>
             Save to My Drinks
         </span>
-
-    </label>
+</label>
 </div>
-
-
 <div class="amount-grid">
-
-            <button
-                type="button"
-                onclick="selectAmount(80)"
-            >
+<button onclick="selectAmount(80)" type="button">
                 80 <small>mg</small>
-            </button>
-
-            <button
-                type="button"
-                onclick="selectAmount(100)"
-            >
+</button>
+<button onclick="selectAmount(100)" type="button">
                 100 <small>mg</small>
-            </button>
-
-            <button
-                type="button"
-                onclick="selectAmount(150)"
-            >
+</button>
+<button onclick="selectAmount(150)" type="button">
                 150 <small>mg</small>
-            </button>
-
-            <button
-                type="button"
-                onclick="selectAmount(200)"
-            >
+</button>
+<button onclick="selectAmount(200)" type="button">
                 200 <small>mg</small>
-            </button>
-
-            <button
-                type="button"
-                onclick="selectAmount(250)"
-            >
+</button>
+<button onclick="selectAmount(250)" type="button">
                 250 <small>mg</small>
-            </button>
-
-            <button
-                type="button"
-                onclick="selectAmount(300)"
-            >
+</button>
+<button onclick="selectAmount(300)" type="button">
                 300 <small>mg</small>
-            </button>
-
-        </div>
-
-
-        <div class="custom-input">
-
-            <input
-    id="customAmount"
-    type="number"
-    min="1"
-    max="999"
-    step="1"
-    inputmode="numeric"
-    placeholder="Custom mg"
->
-
-            <button
-                type="button"
-                onclick="addCustom()"
-            >
+</button>
+</div>
+<label class="logger-label v15-ounces-label" for="logOunces">Ounces <small>(optional)</small></label><input class="text-input v15-ounces" id="logOunces" inputmode="decimal" max="256" min="0.1" placeholder="e.g. 12" step="0.1" type="number"/><div class="v15-palette" data-palette="log"><span class="v15-field-title">Drink color</span><div aria-label="Drink illustration color" class="v15-swatches" role="group"><button aria-label="blue color" aria-pressed="true" class="v15-swatch chosen" data-color="blue" onclick="chooseDrinkColor('log','blue')" style="--swatch:#659fcb" type="button"></button><button aria-label="purple color" aria-pressed="false" class="v15-swatch" data-color="purple" onclick="chooseDrinkColor('log','purple')" style="--swatch:#a282d2" type="button"></button><button aria-label="pink color" aria-pressed="false" class="v15-swatch" data-color="pink" onclick="chooseDrinkColor('log','pink')" style="--swatch:#e39ac2" type="button"></button><button aria-label="teal color" aria-pressed="false" class="v15-swatch" data-color="teal" onclick="chooseDrinkColor('log','teal')" style="--swatch:#59abb0" type="button"></button><button aria-label="coral color" aria-pressed="false" class="v15-swatch" data-color="coral" onclick="chooseDrinkColor('log','coral')" style="--swatch:#e39b86" type="button"></button><button aria-label="gold color" aria-pressed="false" class="v15-swatch" data-color="gold" onclick="chooseDrinkColor('log','gold')" style="--swatch:#caa45b" type="button"></button></div></div><div class="custom-input">
+<input id="customAmount" inputmode="numeric" max="999" min="1" placeholder="Custom mg" step="1" type="number"/>
+<button onclick="addCustom()" type="button">
                 Add
             </button>
-
-        </div>
-
-    </div>
-
 </div>
-
+</div>
+</div>
 <!-- ADD TO MY DRINKS MODAL -->
-<div
-    id="savedDrinkModal"
-    class="overlay"
->
-
-    <div class="modal saved-drink-modal">
-
-        <button
-            class="close-button"
-            type="button"
-            onclick="closeNewSavedDrink()"
-        >
+<div class="overlay" id="savedDrinkModal">
+<div class="modal saved-drink-modal">
+<button class="close-button" onclick="closeNewSavedDrink()" type="button">
             ×
         </button>
-
-        <p class="eyebrow">
+<p class="eyebrow">
             MY DRINKS
         </p>
-
-        <h2>Add a drink</h2>
-
-        <p class="modal-subtitle">
+<h2>Add a drink</h2>
+<p class="modal-subtitle">
             Save a drink for faster logging later.
         </p>
-
-
-        <label
-            class="logger-label"
-            for="savedDrinkName"
-        >
+<label class="logger-label" for="savedDrinkName">
             Drink name
         </label>
-
-        <input
-            id="savedDrinkName"
-            class="text-input"
-            type="text"
-            placeholder="e.g. Monster Ultra"
-            autocomplete="off"
-        >
-
-
-        <label
-            class="logger-label"
-            for="savedDrinkAmount"
-        >
+<input autocomplete="off" class="text-input" id="savedDrinkName" placeholder="e.g. Monster Ultra" type="text"/>
+<label class="logger-label" for="savedDrinkAmount">
             Caffeine
         </label>
-
-        <div class="saved-drink-amount">
-
-            <input
-    id="savedDrinkAmount"
-    type="number"
-    min="1"
-    max="999"
-    step="1"
-    inputmode="numeric"
-    placeholder="150"
->
-
-            <span>mg</span>
-
-        </div>
-
-
-        <button
-            class="save-drink-button"
-            type="button"
-            onclick="saveNewDrink()"
-        >
+<div class="saved-drink-amount">
+<input id="savedDrinkAmount" inputmode="numeric" max="999" min="1" placeholder="150" step="1" type="number"/>
+<span>mg</span>
+</div>
+<label class="logger-label v15-ounces-label" for="savedDrinkOunces">Ounces <small>(optional)</small></label><input class="text-input v15-ounces" id="savedDrinkOunces" inputmode="decimal" max="256" min="0.1" placeholder="e.g. 12" step="0.1" type="number"/><div class="v15-palette" data-palette="savedDrink"><span class="v15-field-title">Drink color</span><div aria-label="Drink illustration color" class="v15-swatches" role="group"><button aria-label="blue color" aria-pressed="true" class="v15-swatch chosen" data-color="blue" onclick="chooseDrinkColor('savedDrink','blue')" style="--swatch:#659fcb" type="button"></button><button aria-label="purple color" aria-pressed="false" class="v15-swatch" data-color="purple" onclick="chooseDrinkColor('savedDrink','purple')" style="--swatch:#a282d2" type="button"></button><button aria-label="pink color" aria-pressed="false" class="v15-swatch" data-color="pink" onclick="chooseDrinkColor('savedDrink','pink')" style="--swatch:#e39ac2" type="button"></button><button aria-label="teal color" aria-pressed="false" class="v15-swatch" data-color="teal" onclick="chooseDrinkColor('savedDrink','teal')" style="--swatch:#59abb0" type="button"></button><button aria-label="coral color" aria-pressed="false" class="v15-swatch" data-color="coral" onclick="chooseDrinkColor('savedDrink','coral')" style="--swatch:#e39b86" type="button"></button><button aria-label="gold color" aria-pressed="false" class="v15-swatch" data-color="gold" onclick="chooseDrinkColor('savedDrink','gold')" style="--swatch:#caa45b" type="button"></button></div></div><button class="save-drink-button" onclick="saveNewDrink()" type="button">
             Save to My Drinks
         </button>
-
-    </div>
-
 </div>
-
+</div>
 <!-- EDIT SAVED DRINK MODAL -->
-<div
-    id="editSavedDrinkModal"
-    class="overlay"
->
-    <div class="modal saved-drink-modal">
-
-        <button
-            class="close-button"
-            type="button"
-            onclick="closeEditSavedDrink()"
-        >
+<div class="overlay" id="editSavedDrinkModal">
+<div class="modal saved-drink-modal">
+<button class="close-button" onclick="closeEditSavedDrink()" type="button">
             ×
         </button>
-
-        <p class="eyebrow">
+<p class="eyebrow">
             MY DRINKS
         </p>
-
-        <h2>Edit drink</h2>
-
-        <p class="modal-subtitle">
+<h2>Edit drink</h2>
+<p class="modal-subtitle">
     Renaming this drink will also update its name
     in your History.
 </p>
-
-        <input
-            id="editSavedDrinkId"
-            type="hidden"
-        >
-
-        <label
-            class="logger-label"
-            for="editSavedDrinkName"
-        >
+<input id="editSavedDrinkId" type="hidden"/>
+<label class="logger-label" for="editSavedDrinkName">
             Drink name
         </label>
-
-        <input
-            id="editSavedDrinkName"
-            class="text-input"
-            type="text"
-            autocomplete="off"
-        >
-
-        <label
-            class="logger-label"
-            for="editSavedDrinkAmount"
-        >
+<input autocomplete="off" class="text-input" id="editSavedDrinkName" type="text"/>
+<label class="logger-label" for="editSavedDrinkAmount">
             Caffeine
         </label>
-
-        <div class="saved-drink-amount">
-
-            <input
-    id="editSavedDrinkAmount"
-    type="number"
-    min="1"
-    max="999"
-    step="1"
-    inputmode="numeric"
->
-
-            <span>mg</span>
-
-        </div>
-
-        <button
-            class="save-drink-button"
-            type="button"
-          onclick="saveEditedSavedDrink()"
-        >
+<div class="saved-drink-amount">
+<input id="editSavedDrinkAmount" inputmode="numeric" max="999" min="1" step="1" type="number"/>
+<span>mg</span>
+</div>
+<label class="logger-label v15-ounces-label" for="editSavedDrinkOunces">Ounces <small>(optional)</small></label><input class="text-input v15-ounces" id="editSavedDrinkOunces" inputmode="decimal" max="256" min="0.1" placeholder="e.g. 12" step="0.1" type="number"/><div class="v15-palette" data-palette="editSavedDrink"><span class="v15-field-title">Drink color</span><div aria-label="Drink illustration color" class="v15-swatches" role="group"><button aria-label="blue color" aria-pressed="true" class="v15-swatch chosen" data-color="blue" onclick="chooseDrinkColor('editSavedDrink','blue')" style="--swatch:#659fcb" type="button"></button><button aria-label="purple color" aria-pressed="false" class="v15-swatch" data-color="purple" onclick="chooseDrinkColor('editSavedDrink','purple')" style="--swatch:#a282d2" type="button"></button><button aria-label="pink color" aria-pressed="false" class="v15-swatch" data-color="pink" onclick="chooseDrinkColor('editSavedDrink','pink')" style="--swatch:#e39ac2" type="button"></button><button aria-label="teal color" aria-pressed="false" class="v15-swatch" data-color="teal" onclick="chooseDrinkColor('editSavedDrink','teal')" style="--swatch:#59abb0" type="button"></button><button aria-label="coral color" aria-pressed="false" class="v15-swatch" data-color="coral" onclick="chooseDrinkColor('editSavedDrink','coral')" style="--swatch:#e39b86" type="button"></button><button aria-label="gold color" aria-pressed="false" class="v15-swatch" data-color="gold" onclick="chooseDrinkColor('editSavedDrink','gold')" style="--swatch:#caa45b" type="button"></button></div></div><button class="save-drink-button" onclick="saveEditedSavedDrink()" type="button">
             Save Changes
         </button>
-
-    </div>
 </div>
-
+</div>
 <!-- MERGE DRINK MODAL -->
-<div
-    id="mergeDrinkModal"
-    class="overlay"
->
-    <div class="modal saved-drink-modal">
-
-        <button
-            class="close-button"
-            type="button"
-            onclick="closeMergeDrink()"
-        >
+<div class="overlay" id="mergeDrinkModal">
+<div class="modal saved-drink-modal">
+<button class="close-button" onclick="closeMergeDrink()" type="button">
             ×
         </button>
-
-        <p class="eyebrow">
+<p class="eyebrow">
             MY DRINKS
         </p>
-
-        <h2>Merge drink</h2>
-
-        <p class="modal-subtitle">
+<h2>Merge drink</h2>
+<p class="modal-subtitle">
             Merge
             <strong id="mergeSourceDrinkName"></strong>
             into another saved drink.
         </p>
-
-        <label
-            class="logger-label"
-            for="mergeTargetDrink"
-        >
+<label class="logger-label" for="mergeTargetDrink">
             Merge into
         </label>
-
-        <select
-            id="mergeTargetDrink"
-            class="merge-drink-select"
-        >
-        </select>
-
-        <label class="merge-amount-option">
-
-            <input
-                id="mergeKeepAmounts"
-                type="checkbox"
-                checked
-            >
-
-            <span>
-                <strong>Keep original caffeine amounts</strong>
-
-                <small>
+<select class="merge-drink-select" id="mergeTargetDrink">
+</select>
+<label class="merge-amount-option">
+<input checked="" id="mergeKeepAmounts" type="checkbox"/>
+<span>
+<strong>Keep original caffeine amounts</strong>
+<small>
                     History entries keep the caffeine amounts
                     originally logged.
                 </small>
-            </span>
-
-        </label>
-
-        <button
-            class="save-drink-button"
-            type="button"
-            onclick="confirmMergeDrink()"
-        >
+</span>
+</label>
+<button class="save-drink-button" onclick="confirmMergeDrink()" type="button">
             Merge Drinks
         </button>
-
-    </div>
 </div>
-
+</div>
 <!-- DEVELOPER -->
-<button
-    id="devButton"
-    type="button"
-    onclick="toggleDev()"
->
+<button id="devButton" onclick="toggleDev()" type="button">
     DEV
 </button>
-
-
 <div id="devPanel">
-
-    <strong>
+<strong>
         DEVELOPER MODE
     </strong>
-
-        <div id="devDate"></div>
-
-
-    <div class="dev-commitment">
-
-        <label for="devCommitmentDate">
+<div id="devDate"></div>
+<div class="dev-commitment">
+<label for="devCommitmentDate">
             Commitment Date
         </label>
-
-        <input
-            id="devCommitmentDate"
-            type="date"
-        >
-
-        <button
-            type="button"
-            onclick="changeDevCommitmentDate()"
-        >
+<input id="devCommitmentDate" type="date"/>
+<button onclick="changeDevCommitmentDate()" type="button">
             Change Commitment
         </button>
-
-    </div>
-
-
-    <div class="dev-buttons">
-
-        <button
-            type="button"
-            onclick="changeDevDay(-1)"
-        >
+</div>
+<div class="dev-buttons">
+<button onclick="changeDevDay(-1)" type="button">
             ← Day
         </button>
-
-
-        <button
-            type="button"
-            onclick="resetDev()"
-        >
+<button onclick="resetDev()" type="button">
             Today
         </button>
-
-
-        <button
-            type="button"
-            onclick="changeDevDay(1)"
-        >
+<button onclick="changeDevDay(1)" type="button">
             Day →
         </button>
-
-    </div>
-
 </div>
-
-
-<script src="script.js?v=1.3.4"></script>
-
+</div>
+<script src="script.js?v=1.5.6-trend-fix"></script>
 <!-- EDIT HISTORY DRINK MODAL -->
-<div id="editDrinkOverlay" class="edit-drink-overlay hidden">
-    <div
-        class="edit-drink-modal"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="editDrinkTitle"
-    >
-        <div class="edit-drink-header">
-            <div>
-                <h2 id="editDrinkTitle">Edit Drink</h2>
-                <p>Update your logged drink details.</p>
-            </div>
-
-            <button
-                type="button"
-                class="edit-drink-close"
-                onclick="closeEditDrink()"
-                aria-label="Close"
-            >×</button>
-        </div>
-
-        <form id="editDrinkForm" onsubmit="saveEditedDrink(event)">
-            <label class="edit-drink-label" for="editDrinkName">
+<div class="edit-drink-overlay hidden" id="editDrinkOverlay">
+<div aria-labelledby="editDrinkTitle" aria-modal="true" class="edit-drink-modal" role="dialog">
+<div class="edit-drink-header">
+<div>
+<h2 id="editDrinkTitle">Edit Drink</h2>
+<p>Update your logged drink details.</p>
+</div>
+<button aria-label="Close" class="edit-drink-close" onclick="closeEditDrink()" type="button">×</button>
+</div>
+<form id="editDrinkForm" onsubmit="saveEditedDrink(event)">
+<label class="edit-drink-label" for="editDrinkName">
                 Drink Name
             </label>
-            <input
-                id="editDrinkName"
-                class="edit-drink-input"
-                type="text"
-                maxlength="100"
-                autocomplete="off"
-                required
-            >
-
-            <label class="edit-drink-label" for="editDrinkAmount">
+<input autocomplete="off" class="edit-drink-input" id="editDrinkName" maxlength="100" required="" type="text"/><div class="flavor-field" data-flavor-field="editDrinkFlavor"><label class="logger-label" for="editDrinkFlavor">Flavor <small>(optional, just for this log)</small></label><input aria-autocomplete="list" aria-controls="editDrinkFlavorSuggestions" aria-expanded="false" autocomplete="off" class="text-input flavor-input" id="editDrinkFlavor" maxlength="60" onfocus="showFlavorSuggestions('editDrinkFlavor')" oninput="showFlavorSuggestions('editDrinkFlavor')" placeholder="e.g. Cotton Candy" spellcheck="false" type="text"/><div class="flavor-suggestions hidden" id="editDrinkFlavorSuggestions" role="listbox"></div></div>
+<label class="edit-drink-label" for="editDrinkAmount">
                 Caffeine (mg)
             </label>
-            <input
-                id="editDrinkAmount"
-                class="edit-drink-input"
-                type="number"
-                min="1"
-                max="999"
-                step="1"
-                inputmode="numeric"
-                required
-            >
-
-            <div class="edit-drink-label">Time of Day</div>
-
-            <div class="edit-drink-times">
-                <button type="button" data-edit-time="morning"
-                    onclick="selectEditDrinkTime('morning')">
-                    ☀️ Morning
-                </button>
-                <button type="button" data-edit-time="afternoon"
-                    onclick="selectEditDrinkTime('afternoon')">
-                    🌤️ Afternoon
-                </button>
-                <button type="button" data-edit-time="night"
-                    onclick="selectEditDrinkTime('night')">
-                    🌙 Night
-                </button>
-            </div>
-
-            <p id="editDrinkError" class="edit-drink-error" role="alert"></p>
-
-            <div class="edit-drink-actions">
-                <button type="button" class="edit-drink-cancel"
-                    onclick="closeEditDrink()">Cancel</button>
-
-                <button type="submit" class="edit-drink-save">
+<input class="edit-drink-input" id="editDrinkAmount" inputmode="numeric" max="999" min="1" required="" step="1" type="number"/>
+<div class="edit-drink-label">Time of Day</div>
+<div class="v15-time-field"><div class="v15-time-top"><label for="editDrinkClock">Time consumed</label><output for="editDrinkClock" id="editDrinkTimeLabel">12:00 PM</output></div><input aria-label="Time consumed in 30-minute increments" class="v15-time-range" id="editDrinkClock" max="47" min="0" oninput="updateClockLabel('editDrink')" step="1" type="range" value="24"/><div class="v15-time-ticks"><span>12 AM</span><span>6 AM</span><span>12 PM</span><span>6 PM</span><span>12 AM</span></div><p class="v15-time-help">Adjust in 30-minute steps</p></div>
+<label class="logger-label v15-ounces-label" for="editDrinkOunces">Ounces <small>(optional)</small></label><input class="text-input v15-ounces" id="editDrinkOunces" inputmode="decimal" max="256" min="0.1" placeholder="e.g. 12" step="0.1" type="number"/><div class="v15-palette" data-palette="editDrink"><span class="v15-field-title">Drink color</span><div aria-label="Drink illustration color" class="v15-swatches" role="group"><button aria-label="blue color" aria-pressed="true" class="v15-swatch chosen" data-color="blue" onclick="chooseDrinkColor('editDrink','blue')" style="--swatch:#659fcb" type="button"></button><button aria-label="purple color" aria-pressed="false" class="v15-swatch" data-color="purple" onclick="chooseDrinkColor('editDrink','purple')" style="--swatch:#a282d2" type="button"></button><button aria-label="pink color" aria-pressed="false" class="v15-swatch" data-color="pink" onclick="chooseDrinkColor('editDrink','pink')" style="--swatch:#e39ac2" type="button"></button><button aria-label="teal color" aria-pressed="false" class="v15-swatch" data-color="teal" onclick="chooseDrinkColor('editDrink','teal')" style="--swatch:#59abb0" type="button"></button><button aria-label="coral color" aria-pressed="false" class="v15-swatch" data-color="coral" onclick="chooseDrinkColor('editDrink','coral')" style="--swatch:#e39b86" type="button"></button><button aria-label="gold color" aria-pressed="false" class="v15-swatch" data-color="gold" onclick="chooseDrinkColor('editDrink','gold')" style="--swatch:#caa45b" type="button"></button></div></div><p class="edit-drink-error" id="editDrinkError" role="alert"></p>
+<div class="edit-drink-actions">
+<button class="edit-drink-cancel" onclick="closeEditDrink()" type="button">Cancel</button>
+<button class="edit-drink-save" type="submit">
                     Save Changes
                 </button>
-            </div>
-        </form>
-    </div>
 </div>
-
-</body>
+</form>
+</div>
+</div>
+</div></body>
 </html>
-

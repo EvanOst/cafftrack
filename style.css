@@ -1,3 +1,4 @@
+/* ===== BEGIN style.css ===== */
 :root {
     --blue: #3d6f9f;
     --blue-light: #eaf2f9;
@@ -3323,7 +3324,536 @@ body.editing-drink {
     padding: 12px;
     border-radius: 12px;
 }
-/* v1.3.4 — Fix iPhone date picker overflow */
+/* v1.3.5 — iPhone date picker sizing and alignment */
 .past-log-button #pastDrinkDate {
-    width: calc(100% - 30px);
+    box-sizing: border-box !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0;
+    padding: 12px 14px;
+    text-align: center;
+}
+
+/* ===== CAFFTRACK v1.4 FULL VISUAL REDESIGN ===== */
+:root{--blue:#527fa4;--blue-light:#e8f2f8;--green:#649a7e;--text:#17334b;--muted:#7c8d9b;--border:#e7edf1;--background:#f7f8fa;--white:#fff;--danger:#c64d58;--shadow:0 12px 38px rgba(29,49,68,.045);--v14-cream:#f5f1e9;--v14-panel:#fff;--v14-raised:#f0f5f8;--v14-strong:#16364e}
+body{background:var(--background);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;letter-spacing:-.012em;-webkit-font-smoothing:antialiased}
+body.dark-mode{--blue:#9bc5e5;--blue-light:#2b4051;--text:#f2f5f8;--muted:#9babb9;--border:#33404c;--background:#141c26;--white:#222e3b;--shadow:0 15px 34px rgba(0,0,0,.14);--v14-cream:#26333b;--v14-panel:#222e3b;--v14-raised:#2d4051;--v14-strong:#f8f4ec}
+.app{width:min(100%,540px);padding:32px 22px calc(130px + env(safe-area-inset-bottom))}
+main{animation:v14appear .25s ease both}@keyframes v14appear{from{opacity:.6;transform:translateY(5px)}to{opacity:1;transform:none}}
+h1{font-size:clamp(29px,7vw,37px);font-weight:760;letter-spacing:-1.3px;line-height:1.13;color:var(--v14-strong)}
+h2{font-size:22px;letter-spacing:-.65px;font-weight:760;color:var(--v14-strong)}
+.eyebrow{font-size:10px;letter-spacing:1.7px;font-weight:850;color:var(--blue);margin-bottom:10px}
+.v14-title-dot{color:#8cbfdd}.v14-beta{font-size:8px;letter-spacing:1px;background:var(--blue-light);color:var(--blue);padding:5px 7px;border-radius:6px;margin-left:7px;vertical-align:2px}
+.v14-topbar{align-items:flex-start;margin-bottom:22px;gap:14px}.v14-brand-block{min-width:0}.v14-topbar h1{font-size:clamp(28px,7vw,35px)}.v14-subgreeting{font-size:12px;color:var(--muted);margin:8px 0 0;line-height:1.4}
+.icon-button{background:var(--white);border:1px solid var(--border);border-radius:15px;width:46px;height:46px;flex-shrink:0;box-shadow:var(--shadow);color:var(--text)}.v14-settings-symbol{font-size:23px;line-height:1}
+.encouragement{background:var(--v14-cream);border:1px solid transparent;box-shadow:none;border-radius:20px;padding:17px 18px;margin-bottom:32px;gap:13px}.encouragement-icon{background:rgba(99,151,121,.13);border-radius:13px;width:44px;height:44px}.encouragement .eyebrow{color:var(--green);margin-bottom:5px}.encouragement h2{font-size:13px;line-height:1.55;font-weight:650;color:var(--text)}
+.section{margin-bottom:33px}.v14-section-top{display:flex;align-items:end;justify-content:space-between;margin-bottom:17px}.v14-section-top h2{margin:0;font-size:27px}.v14-section-aside{font-size:10px;color:var(--muted);letter-spacing:1.5px;font-weight:800;padding-bottom:4px}
+.today-card{background:linear-gradient(150deg,#244c6a 0%,#183951 68%,#132e45 100%);border:1px solid rgba(255,255,255,.06);border-radius:26px;padding:25px 25px 22px;box-shadow:0 18px 38px rgba(18,48,74,.16);color:#fff;position:relative;overflow:hidden}
+.today-card:after{content:'';position:absolute;width:210px;height:210px;border:1px solid rgba(182,219,241,.13);border-radius:50%;top:-112px;right:-85px;pointer-events:none;box-shadow:0 0 0 32px rgba(180,220,244,.035),0 0 0 70px rgba(180,220,244,.025)}
+.v14-hero-top{display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1}.v14-hero-kicker{font-size:10px;letter-spacing:1.65px;font-weight:800;color:#b4d3e8}.v14-hero-icon{display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:13px;background:rgba(179,214,235,.13);color:#b9d9ed;font-size:29px;font-weight:300}
+.caffeine-number{position:relative;z-index:1;font-size:clamp(66px,16vw,83px);font-weight:760;letter-spacing:-4px;line-height:1.04;margin-top:13px;color:#fff}.caffeine-number small{font-size:21px;font-weight:600;letter-spacing:0;color:#b9d2e2;margin-left:6px}.v14-hero-caption{color:#b8cedd;font-size:12px;margin:8px 0 25px}
+.today-stats{display:grid;grid-template-columns:1fr 1fr;gap:11px;text-align:left}.v14-mini-stat{display:flex;align-items:center;gap:11px;padding:14px 11px;background:rgba(255,255,255,.095);border:1px solid rgba(255,255,255,.075);border-radius:15px;min-width:0}.v14-stat-icon{font-size:17px;color:#c8e3f1}.v14-mini-stat strong{display:block;font-size:22px;font-weight:750;color:#fff;line-height:1.1}.v14-mini-stat div>span{display:block;font-size:10px;color:#bdd0de;margin-top:5px;white-space:nowrap}
+.log-button{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:14px;padding:18px 18px;background:#a7d4f1;color:#153650;border-radius:17px;box-shadow:0 9px 24px rgba(58,118,160,.13);font-size:14px;font-weight:800;position:relative}.log-button span{margin:0}.v14-plus{font-size:21px;line-height:0}.v14-log-arrow{position:absolute;right:20px;font-size:18px;opacity:.7}
+.card{background:var(--white);border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow)}.section-heading{align-items:center;margin-bottom:15px}.section-heading h2{font-size:25px;margin:0}.section-heading .eyebrow{margin-bottom:6px}.v14-chart-pill{font-size:10px;color:var(--blue);background:var(--blue-light);padding:9px 12px;border-radius:999px;font-weight:750;white-space:nowrap}.chart-card{padding:20px 18px 15px}.v14-chart-intro{font-size:12px;font-weight:700;color:var(--muted);margin-bottom:18px}.bars{height:150px;gap:9px}.bar-column{font-size:10px;gap:9px}.bar{width:min(26px,100%);border-radius:8px 8px 5px 5px;background:#d6e6f0}.today-bar{background:#709fc0}body.dark-mode .bar{background:#3b5266}body.dark-mode .today-bar{background:#a4cce8}
+.stats-grid{gap:13px}.stat-card{min-height:151px;padding:19px 17px}.widget-icon{width:39px;height:39px;border-radius:12px;background:var(--blue-light);display:flex;align-items:center;justify-content:center;margin-bottom:15px}.stat-card p{font-size:9px;letter-spacing:1.1px}.stat-card h3{font-size:32px;letter-spacing:-1px}.stat-card .muted{font-size:11px}
+.v14-page-header{margin-bottom:25px;padding-top:5px}.v14-page-header h1{font-size:36px}.v14-page-header .page-description{margin:11px 0 0;font-size:13px;line-height:1.5}.v14-header-rule{height:3px;width:37px;background:#a6d0eb;border-radius:4px;margin-top:18px}
+.history-range,.my-drinks-sort,.drink-insights-toggle{padding:5px;border-radius:16px;background:var(--v14-raised);border:1px solid var(--border);gap:4px}.history-range-button,.my-drinks-sort-button,.drink-insights-toggle button{border-radius:11px!important;transition:background .15s ease,color .15s ease}.history-range-button.active,.my-drinks-sort-button.active,.drink-insights-toggle button.active{background:var(--white)!important;box-shadow:0 3px 12px rgba(0,0,0,.06);color:var(--v14-strong)!important}
+.history-insights-card{border-radius:24px!important;background:var(--white)!important;border:1px solid var(--border)!important;box-shadow:var(--shadow);padding:24px!important}.history-total-number strong{font-size:54px!important;letter-spacing:-2px}.history-stat-grid{border-top:1px solid var(--border);padding-top:18px;margin-top:20px}.history-stat-label{letter-spacing:1.1px;font-size:10px}.insights-summary-grid{gap:11px}.insights-summary-item{border-radius:18px;padding:17px!important}.insights-summary-icon{background:var(--blue-light);border-radius:12px;padding:9px;display:inline-flex;align-items:center;justify-content:center}.history-trend-button,.past-log-button{border-radius:18px!important}.history-day{border-radius:18px;padding:17px;box-shadow:var(--shadow)}.past-date-row{min-width:0}.past-date-picker{max-width:100%;min-width:0!important;box-sizing:border-box!important}
+.my-drinks-toolbar{gap:10px}.my-drinks-search-wrap{min-width:0}.my-drinks-search{background:var(--white)!important;border:1px solid var(--border)!important;border-radius:15px!important;padding:16px!important;box-shadow:var(--shadow)}.my-drinks-add-button{border-radius:15px!important;background:#a7d4f1!important;color:#153650!important;min-width:51px!important;min-height:51px!important}.my-drinks-sort{margin:16px 0 22px}.my-drink-card,.my-drinks-item,.saved-drink-card{border-radius:19px!important;box-shadow:var(--shadow)}
+.progress-grid{gap:12px}.progress-card{padding:20px 17px;min-height:160px;border-radius:20px}.progress-card>span{display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:13px;background:var(--blue-light);margin-bottom:15px}.progress-card small{font-size:9px;letter-spacing:1px;line-height:1.5}.progress-card strong{font-size:32px;letter-spacing:-1px;margin-top:8px}.progress-card p{font-size:11px;margin-top:4px}.achievements-card{border-radius:23px!important;box-shadow:var(--shadow)}.personal-record{padding-top:15px;padding-bottom:15px}
+.settings-card{border-radius:23px;box-shadow:var(--shadow)}.setting{padding:20px 18px;gap:13px}.setting strong{font-size:13px}.setting small{font-size:11px;line-height:1.5}.setting button,.setting .button,#appearanceSelect{border-radius:11px;background:var(--blue-light);color:var(--blue);padding:11px 13px;font-size:11px;text-decoration:none}#nameInput{width:112px;max-width:38%;border-radius:11px;padding:12px 9px;background:var(--background);font-size:13px}.commitment-date-display{font-size:11px!important;white-space:nowrap}.app-version{margin-top:30px;font-size:11px}
+.bottom-nav{width:min(100%,540px);padding:11px 10px calc(11px + env(safe-area-inset-bottom));background:rgba(255,255,255,.95);border-top:1px solid var(--border);box-shadow:0 -12px 35px rgba(22,48,71,.045);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px)}body.dark-mode .bottom-nav{background:rgba(26,36,47,.96)}.nav-item{gap:5px;min-width:0;padding:4px 1px;color:var(--muted)}.nav-item .nav-icon{width:42px;height:37px;border-radius:13px;display:flex;align-items:center;justify-content:center}.nav-item .nav-icon:before{display:none!important}.nav-item .nav-icon svg{width:22px;height:22px}.nav-item.active{color:var(--v14-strong)}.nav-item.active .nav-icon{background:var(--blue-light)}.nav-item.active svg{color:var(--blue)}.nav-item small{font-size:9px;font-weight:700;line-height:1.15}
+.overlay .modal,.edit-drink-modal,.new-saved-drink-modal{border-radius:25px!important;background:var(--white);color:var(--text);box-shadow:0 25px 70px rgba(0,0,0,.25)}.modal h2{font-size:27px}.text-input,.edit-drink-input{border-radius:13px!important;background:var(--background)!important;color:var(--text)!important;border:1px solid var(--border)!important}.time-button,.amount-grid button,.edit-drink-times button{border-radius:12px!important}.time-button.selected,.amount-grid button.selected,.edit-drink-times button.selected{background:var(--blue-light)!important;color:var(--blue)!important;border-color:var(--blue)!important}.custom-input button,.edit-drink-save{border-radius:12px!important}
+body.dark-mode input,body.dark-mode select{color-scheme:dark}body:not(.dark-mode) input,body:not(.dark-mode) select{color-scheme:light}
+@media(max-width:390px){.app{padding-left:17px;padding-right:17px}.today-card{padding:21px 18px}.v14-mini-stat{gap:7px;padding:13px 8px}.v14-mini-stat div>span{font-size:9px}.v14-mini-stat strong{font-size:20px}.setting{padding:17px 12px}.setting small{font-size:10px}.progress-card{padding:17px 12px}}
+@media(min-width:700px){.app{padding-top:45px}.bottom-nav{border-radius:23px 23px 0 0}}
+
+/* ===== END style.css ===== */
+
+/* ===== BEGIN v14-unified.css ===== */
+
+/* CAFFTRACK v1.4 — unified minimalist design pass
+   All changes are presentational. Existing IDs, events and storage are unchanged. */
+:root {
+ --v14-hairline:rgba(23,51,75,.055);
+ --v14-soft:#f0f5f8;
+ --v14-quiet:#f5f7f9;
+}
+body.dark-mode {
+ --v14-hairline:rgba(220,234,247,.075);
+ --v14-soft:#2a3948;
+ --v14-quiet:#1b2733;
+ --border:#354351;
+}
+/* A unified heading rhythm, with no decorative rules */
+.v14-page-header{margin-bottom:27px;padding-top:3px}
+.v14-page-header .eyebrow{margin-bottom:11px}
+.v14-page-header h1{font-size:clamp(33px,9vw,40px);letter-spacing:-1.6px}
+.v14-page-header .page-description{margin-top:10px;max-width:340px;color:var(--muted);font-size:13px}
+.v14-header-rule{display:none}
+#historyPage .section,#progressPage .section{margin-bottom:32px}
+#historyPage .section>h2,#progressPage .section>h2{font-size:25px;letter-spacing:-.8px}
+/* Subtle elevated surfaces; structure comes from whitespace instead of outlines */
+#historyPage .card,#progressPage .card,#drinksPage .card,
+#settingsPage .settings-card,.achievements-card,
+.history-day,.past-log-button,.my-drink-card {
+ border-color:transparent!important;
+ box-shadow:0 7px 28px rgba(27,50,71,.035)!important;
+}
+body.dark-mode #historyPage .card,body.dark-mode #progressPage .card,
+body.dark-mode #drinksPage .card,body.dark-mode .achievements-card,
+body.dark-mode .history-day,body.dark-mode .my-drink-card,
+body.dark-mode .settings-card{box-shadow:none!important}
+/* HISTORY: one strong hero like the Home total, with quiet inset metrics */
+.history-range{background:var(--v14-soft)!important;border:0!important;padding:5px!important;margin-bottom:18px!important;border-radius:17px!important}
+.history-range-button{min-height:40px;font-size:12px}
+.history-range-button.active{border-radius:12px!important;box-shadow:0 2px 9px rgba(20,46,67,.06)!important}
+.history-insights-card{
+ background:linear-gradient(150deg,#244c6a 0%,#183951 68%,#132e45 100%)!important;
+ border:0!important;border-radius:26px!important;box-shadow:0 18px 38px rgba(18,48,74,.13)!important;
+ padding:25px!important;position:relative;isolation:isolate;
+}
+.history-insights-card:before{content:"";position:absolute;z-index:-1;right:-65px;top:-100px;width:200px;height:200px;border:1px solid rgba(182,219,241,.12);border-radius:50%;box-shadow:0 0 0 35px rgba(180,220,244,.035);pointer-events:none}
+.history-total{padding:0!important}
+.history-insights-card .history-stat-label{color:#b8d2e3!important;letter-spacing:1.45px}
+.history-total-number{margin-top:12px;gap:9px}
+.history-total-number strong{font-size:clamp(60px,15vw,77px)!important;line-height:1.03!important;letter-spacing:-3px!important;color:#fff!important}
+.history-total-number span{color:#bdd6e5!important;font-size:20px!important}
+#historyComparison{color:#b8d2e3!important;font-size:12px;display:block;margin-top:10px}
+.history-stat-grid{gap:10px;border:0!important;margin-top:25px!important;padding:0!important}
+.history-stat-grid>div{border:1px solid rgba(255,255,255,.065)!important;background:rgba(255,255,255,.09);padding:15px!important;border-radius:15px;min-width:0}
+.history-stat-grid strong{color:#fff!important;font-size:23px!important}
+.history-stat-grid strong small{color:#c3d7e4!important}
+/* Insights are simple editorial cards, not nested bordered widgets */
+.insights-summary-grid{gap:10px}
+.insights-summary-item{padding:18px!important;border-radius:20px!important;min-width:0}
+.insights-summary-item small{letter-spacing:1px;line-height:1.45}
+.insights-summary-item strong{letter-spacing:-.3px}
+.insights-summary-icon{background:var(--v14-soft)!important;width:40px;height:40px;padding:0!important;border-radius:13px!important;margin-bottom:12px}
+.history-trend-toggle{margin-top:22px}
+.history-trend-button{background:var(--v14-soft)!important;border:0!important;border-radius:15px!important;min-height:49px}
+.history-chart-card,.weekday-insights-card,.time-insights-card,.drink-insights-card{padding:19px!important;border-radius:21px!important}
+.drink-insights-toggle{background:var(--v14-soft)!important;border:0!important}
+.history-day{border-radius:20px!important;margin-bottom:12px!important}
+.history-drinks{border-top-color:var(--v14-hairline)!important}
+.past-log-button{border-radius:21px!important;padding:20px!important}
+.past-log-button #pastDrinkDate{background:var(--v14-quiet)!important;border:1px solid transparent!important;color:var(--text)!important;-webkit-text-fill-color:var(--text)!important;color-scheme:light;min-width:0!important;max-width:100%!important;width:100%!important;text-align:left!important}
+body.dark-mode .past-log-button #pastDrinkDate{color-scheme:dark}
+.past-log-button .past-date-button{background:#a7d4f1!important;color:#153650!important;border-radius:14px!important}
+/* MY DRINKS: airy searchable library with an uncluttered action hierarchy */
+.my-drinks-toolbar{gap:11px}
+.my-drinks-search{background:var(--white)!important;border:0!important;box-shadow:0 7px 28px rgba(27,50,71,.035)!important;border-radius:17px!important;min-height:54px}
+.my-drinks-add-button{min-height:54px!important;min-width:54px!important;border-radius:17px!important;font-size:25px!important}
+.my-drinks-sort{background:var(--v14-soft)!important;border:0!important;border-radius:17px!important;padding:5px!important;margin:17px 0 22px!important}
+.my-drinks-sort-button{min-height:39px}
+.my-drink-card{padding:17px 15px!important;margin-bottom:11px!important;border-radius:20px!important;gap:12px!important;background:var(--white)!important}
+.my-drink-bolt{width:44px!important;height:44px!important;border-radius:14px!important;background:var(--v14-soft)!important}
+.my-drink-bolt:before{background:#e2b65b!important}
+.my-drink-info strong{font-size:14px!important;letter-spacing:-.2px}
+.my-drink-info span{font-size:11px!important;margin-top:5px!important}
+.my-drink-log-button{padding:11px 14px!important;border-radius:12px!important;background:var(--blue-light)!important;color:var(--blue)!important;font-size:12px!important}
+.my-drink-menu-button{width:34px;height:39px}
+.my-drink-menu{border:0!important;border-radius:16px!important;box-shadow:0 15px 45px rgba(0,0,0,.14)!important}
+/* PROGRESS: metric hierarchy consistent with Home */
+.progress-grid{gap:12px!important;margin-top:4px}
+.progress-card{border-radius:21px!important;min-height:155px!important;padding:20px 18px!important}
+.progress-card>span{width:38px!important;height:38px!important;border-radius:12px!important;margin-bottom:14px!important}
+.progress-card strong{font-size:34px!important;letter-spacing:-1.4px!important;margin-top:7px!important}
+.progress-card small{font-size:9px!important;letter-spacing:1.05px!important}
+.progress-card p{font-size:11px!important}
+.progress-card:first-child{background:linear-gradient(150deg,#244c6a,#183951 78%)!important;color:white!important}
+.progress-card:first-child>span{background:rgba(255,255,255,.13)!important}
+.progress-card:first-child small,.progress-card:first-child p{color:#bed4e3!important}
+.progress-card:first-child strong{color:white!important}
+.achievements-card{background:var(--white)!important;border-radius:22px!important;padding:5px 18px!important}
+.achievements-label{letter-spacing:1.3px}
+.personal-record{border-bottom:1px solid var(--v14-hairline)!important;padding:16px 0!important}
+.personal-record:last-child{border-bottom:0!important}
+.personal-record-icon{background:var(--v14-soft)!important;border-radius:12px!important}
+.milestone{background:var(--v14-quiet)!important;border:0!important;border-radius:15px!important;margin-bottom:9px!important}
+/* SETTINGS: quiet grouped list with generous tap targets and very subtle separators */
+.settings-card{background:var(--white)!important;border:0!important;border-radius:23px!important;overflow:hidden}
+.setting{padding:21px 19px!important;gap:10px!important;border-bottom:1px solid var(--v14-hairline)!important;min-height:82px}
+.setting:last-child{border-bottom:0!important}
+.setting>div:first-child{flex:1;min-width:0}
+.setting strong{font-size:14px!important;letter-spacing:-.15px}
+.setting small{font-size:11px!important;line-height:1.5!important;max-width:230px}
+.setting button,.setting .button,#appearanceSelect{border:0!important;background:var(--v14-soft)!important;color:var(--text)!important;border-radius:12px!important;min-height:39px;padding:11px 12px!important;font-weight:750!important}
+.setting .danger{background:rgba(198,77,88,.10)!important;color:var(--danger)!important}
+#nameInput{border:0!important;background:var(--v14-soft)!important;border-radius:12px!important;min-height:40px;max-width:39%!important}
+.commitment-date-display{color:var(--muted)!important;font-size:11px!important;white-space:normal!important;text-align:right}
+/* LOGGER + EDIT: match the same rounded, low-line design */
+.overlay .modal,.edit-drink-modal,.new-saved-drink-modal{border:0!important;border-radius:26px!important;background:var(--white)!important;color:var(--text)!important}
+.modal h2{letter-spacing:-.8px}
+.logger-label{font-size:12px;font-weight:700}
+.text-input,.edit-drink-input,.custom-input input{background:var(--v14-quiet)!important;border:1px solid transparent!important;border-radius:14px!important;color:var(--text)!important}
+.text-input:focus,.edit-drink-input:focus,.custom-input input:focus,#nameInput:focus,.my-drinks-search:focus{outline:2px solid var(--blue)!important;outline-offset:1px}
+.amount-grid button,.time-button,.edit-drink-times button{border:1px solid transparent!important;background:var(--v14-soft)!important;border-radius:13px!important;min-height:43px}
+.amount-grid button.selected,.time-button.selected,.edit-drink-times button.selected{border-color:var(--blue)!important}
+/* Consistent focus treatment for keyboard and accessibility */
+button:focus-visible,a:focus-visible,select:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+@media(max-width:390px){.history-insights-card{padding:21px!important}.history-stat-grid>div{padding:12px!important}.setting{padding:18px 13px!important}.setting small{font-size:10px!important}.my-drink-card{padding:14px 11px!important}.my-drink-log-button{padding:10px 11px!important}}
+@media(prefers-reduced-motion:reduce){main{animation:none!important}*{scroll-behavior:auto!important}}
+
+/* ===== END v14-unified.css ===== */
+
+/* ===== BEGIN v142-refinements.css ===== */
+/* CaffTrack v1.4.2 — user-directed refinements. Presentation only. */
+:root{--v142-sky:#90c9f2;--v142-deep:#173b58;--v142-ink:#244f70;--v142-mint:#d6eee1}
+body.dark-mode{--v142-sky:#8dc5ed;--v142-deep:#193b56;--v142-ink:#a7d9f4;--v142-mint:#244e42}
+/* Uploaded monochrome icons: CSS masks recolor correctly in both themes. */
+.v142-mask-icon{display:block;width:23px;height:23px;background:currentColor;-webkit-mask-image:var(--mask-icon);mask-image:var(--mask-icon);-webkit-mask-size:contain;mask-size:contain;-webkit-mask-position:center;mask-position:center;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat}
+.nav-item .nav-icon .v142-mask-icon{width:23px;height:23px;color:inherit}
+.nav-item.active .nav-icon .v142-mask-icon{color:var(--blue)}
+.v142-header-gear{width:21px;height:21px;margin:auto;color:var(--text)}
+.v14-settings-symbol.v142-header-gear{font-size:initial}
+/* Home: keep the approved layout, with calmer iconography and brighter chart. */
+#homePage .encouragement{gap:0;background:linear-gradient(112deg,#e2f4e9,#f2f8ee 82%)!important;border-color:transparent!important}
+body.dark-mode #homePage .encouragement{background:linear-gradient(112deg,#1d453b,#263d38 88%)!important}
+#homePage .encouragement .eyebrow{color:#34745a!important}
+body.dark-mode #homePage .encouragement .eyebrow{color:#9cdec0!important}
+#homePage .encouragement h2{line-height:1.5}
+.v142-hero-energy{display:grid!important;place-items:center!important;overflow:hidden}
+.v142-hero-energy .v142-mask-icon{width:27px;height:27px;color:inherit}
+.v142-stat-outline{display:grid!important;place-items:center!important}
+.v142-stat-outline .v142-mask-icon{width:20px;height:20px;color:inherit}
+#homePage .chart-card{background:linear-gradient(160deg,#fff,#f4f9ff)!important;border:0!important}
+body.dark-mode #homePage .chart-card{background:linear-gradient(155deg,#263847,#202f3c)!important}
+#weeklyBars .bar{background:linear-gradient(180deg,#abdffa 0%,#73b7e9 52%,#5e9ecf 100%)!important;box-shadow:0 3px 9px rgba(81,150,202,.13);border-radius:8px 8px 4px 4px}
+#weeklyBars .bar.today-bar{background:linear-gradient(180deg,#b1edfa 0%,#6bc5ef 37%,#4384c3 100%)!important;box-shadow:0 4px 15px rgba(73,157,219,.29)}
+body.dark-mode #weeklyBars .bar{background:linear-gradient(180deg,#88d0f0,#417cab)!important}
+body.dark-mode #weeklyBars .bar.today-bar{background:linear-gradient(180deg,#c0f1fc,#5aafdf,#346caa)!important}
+#weeklyBars .bar-column:last-child span{font-size:10px;font-weight:850;color:var(--blue);white-space:nowrap}
+#homePage .stats-grid{gap:12px}
+#homePage .stat-card{min-height:156px;border:0!important;box-shadow:0 6px 25px rgba(22,53,77,.035)!important}
+#homePage .stat-card:nth-child(3){background:linear-gradient(145deg,#eaf5fc,#f8fbfd)!important}
+#homePage .stat-card:nth-child(4){background:linear-gradient(145deg,#eff7ef,#fbfcf7)!important;cursor:pointer}
+body.dark-mode #homePage .stat-card:nth-child(3){background:linear-gradient(145deg,#274253,#243440)!important}
+body.dark-mode #homePage .stat-card:nth-child(4){background:linear-gradient(145deg,#28463e,#273a38)!important}
+.v142-stat-symbol{color:var(--blue)!important;font-weight:800;font-size:24px}
+.v142-stat-symbol .v142-mask-icon{width:22px;height:22px}
+.v142-latest h3{font-size:clamp(15px,4.2vw,21px)!important;line-height:1.25;overflow-wrap:anywhere}
+/* History: editorial summary distinct from Home, plus subtle gradients for supporting insights. */
+#historyPage .history-insights-card.v142-history-summary{background:linear-gradient(130deg,#eaf4fc 0%,#d5e9f8 55%,#c3dff2 100%)!important;color:#173d59!important;border-radius:25px!important;box-shadow:none!important;padding:24px!important}
+#historyPage .v142-history-summary:before{border-color:rgba(29,91,135,.09);box-shadow:0 0 0 34px rgba(255,255,255,.12)}
+#historyPage .v142-history-summary .history-stat-label{color:#4b7291!important}
+#historyPage .v142-history-summary .history-total-number strong{color:#173b59!important;font-size:clamp(49px,13vw,65px)!important}
+#historyPage .v142-history-summary .history-total-number span{color:#3e7094!important}
+#historyPage .v142-history-summary #historyComparison{color:#416b88!important}
+#historyPage .v142-history-summary .history-stat-grid>div{background:rgba(255,255,255,.52)!important;border:0!important}
+#historyPage .v142-history-summary .history-stat-grid strong{color:#1b4a6d!important}
+#historyPage .v142-history-summary .history-stat-grid strong small{color:#477697!important}
+body.dark-mode #historyPage .history-insights-card.v142-history-summary{background:linear-gradient(130deg,#23485e,#315a70 70%,#2b5366)!important;color:#fff!important}
+body.dark-mode #historyPage .v142-history-summary .history-total-number strong,body.dark-mode #historyPage .v142-history-summary .history-stat-grid strong{color:#f7fbff!important}
+body.dark-mode #historyPage .v142-history-summary .history-stat-label,body.dark-mode #historyPage .v142-history-summary .history-total-number span,body.dark-mode #historyPage .v142-history-summary #historyComparison,body.dark-mode #historyPage .v142-history-summary .history-stat-grid strong small{color:#c0deef!important}
+body.dark-mode #historyPage .v142-history-summary .history-stat-grid>div{background:rgba(255,255,255,.085)!important}
+#historyPage .insights-summary-item:nth-child(1){background:linear-gradient(150deg,#fff,#f0f7ff)!important}
+#historyPage .insights-summary-item:nth-child(2){background:linear-gradient(150deg,#fff,#f2f8f0)!important}
+#historyPage .insights-summary-item:nth-child(3){background:linear-gradient(150deg,#fff,#f9f5ed)!important}
+body.dark-mode #historyPage .insights-summary-item:nth-child(n){background:linear-gradient(150deg,#293b49,#223240)!important}
+/* Generic outlined icon instead of a filled coffee emoji on history entries. */
+.history-icon{font-size:0!important;background:var(--v14-soft)!important}
+.history-icon:before{content:"";display:block;width:20px;height:20px;background:var(--blue);-webkit-mask:url('images/caffeine.png') center/contain no-repeat;mask:url('images/caffeine.png') center/contain no-repeat}
+.history-icon img,.history-icon svg{display:none!important}
+/* My Drinks: illustrated can icon, no full-color emoji. */
+.my-drink-bolt.v142-alani-icon,.my-drink-bolt.v142-generic-drink-icon{display:grid!important;place-items:center!important;background:linear-gradient(145deg,#eef5ff,#f4f0fb)!important}
+.my-drink-bolt.v142-alani-icon:before,.my-drink-bolt.v142-generic-drink-icon:before{display:none!important}
+.v142-can-illustration{position:relative;display:block;width:17px;height:27px;border:1.8px solid #5776a5;border-radius:4px 4px 5px 5px;transform:rotate(-7deg);background:transparent}
+.v142-can-illustration:before{content:"";position:absolute;left:2px;right:2px;top:-3px;height:3px;border:1.5px solid #5776a5;border-radius:50%}
+.v142-can-illustration:after{content:"ϟ";position:absolute;inset:3px 0 0;text-align:center;color:#6b89b9;font-size:16px;font-weight:700}
+.v142-alani-icon .v142-can-illustration{border-color:#9b78bb}
+.v142-alani-icon .v142-can-illustration:before{border-color:#9b78bb}
+.v142-alani-icon .v142-can-illustration:after{color:#9b78bb}
+body.dark-mode .my-drink-bolt.v142-alani-icon,body.dark-mode .my-drink-bolt.v142-generic-drink-icon{background:linear-gradient(145deg,#324454,#354053)!important}
+/* Progress: modern gradients, but the streak remains outlined as requested. */
+#progressPage .progress-card:first-child{background:linear-gradient(135deg,#dceefa,#bcdff4)!important;border:1.5px solid #9bcbe9!important;box-shadow:none!important;color:#1a4664!important}
+#progressPage .progress-card:first-child small,#progressPage .progress-card:first-child p{color:#527f9e!important}
+#progressPage .progress-card:first-child strong{color:#163f60!important}
+#progressPage .progress-card:first-child>span{background:rgba(255,255,255,.45)!important}
+#progressPage .progress-card:nth-child(2){background:linear-gradient(145deg,#fff,#eff7fc)!important}
+#progressPage .progress-card:nth-child(3){background:linear-gradient(145deg,#fff,#edf8f1)!important}
+#progressPage .progress-card:nth-child(4){background:linear-gradient(145deg,#fff,#f0f5ff)!important}
+#progressPage .progress-card:nth-child(5){background:linear-gradient(145deg,#fff,#faf5ee)!important}
+#progressPage .progress-card:nth-child(6){background:linear-gradient(145deg,#fff,#f3f2fc)!important}
+body.dark-mode #progressPage .progress-card:first-child{background:linear-gradient(135deg,#24475d,#305e76)!important;border-color:#5689a9!important}
+body.dark-mode #progressPage .progress-card:first-child strong{color:#f2fbff!important}
+body.dark-mode #progressPage .progress-card:first-child small,body.dark-mode #progressPage .progress-card:first-child p{color:#c6e2f1!important}
+body.dark-mode #progressPage .progress-card:nth-child(n+2){background:linear-gradient(145deg,#293c4a,#243340)!important}
+@media(max-width:380px){#homePage .stat-card{padding:14px!important}#historyPage .v142-history-summary{padding:19px!important}}
+
+/* ===== END v142-refinements.css ===== */
+
+/* ===== BEGIN v15-features.css ===== */
+/* CaffTrack v1.5 beta preview — all additions scoped, no data reset */
+#homePage .v14-subgreeting{color:var(--blue);font-weight:600;font-size:13px}
+#homePage .encouragement{background:linear-gradient(115deg,#eaf5ee,#e5f2f4 58%,#f4f9fd)!important}
+#homePage .encouragement .eyebrow{color:#4b7b75!important}
+body.dark-mode #homePage .encouragement{background:linear-gradient(110deg,#27453f,#254553 75%,#243b50)!important}
+body.dark-mode #homePage .encouragement .eyebrow{color:#a3d6d6!important}
+#homePage .stat-card:nth-child(4){background:linear-gradient(145deg,#edf6fb,#f6faff)!important}
+#homePage .stat-card:first-child{background:linear-gradient(145deg,#eef7fc,#f8fcff)!important}
+body.dark-mode #homePage .stat-card:nth-child(4){background:linear-gradient(145deg,#254357,#29384b)!important}
+body.dark-mode #homePage .stat-card:first-child{background:linear-gradient(145deg,#274355,#243440)!important}
+/* Chart: use more of the card, preserve date labels and add mouse/touch/focus details. */
+#homePage .chart-card{padding:18px 15px 13px!important}
+#weeklyBars.bars{height:165px!important;align-items:flex-end!important;padding:18px 0 0;overflow:visible!important}
+#weeklyBars .bar-column{position:relative;min-width:0;gap:7px;justify-content:flex-end}
+#weeklyBars .bar{width:min(27px,70%)!important;min-height:7px;cursor:help;transition:transform .2s,filter .2s;position:relative;z-index:2}
+#weeklyBars .bar-column:hover .bar,#weeklyBars .bar:focus-visible{filter:brightness(1.07);transform:scaleX(1.09);outline:2px solid #7fbde5;outline-offset:2px}
+#weeklyBars .v15-bar-tip{position:absolute;z-index:5;bottom:calc(100% + 4px);left:50%;transform:translateX(-50%) translateY(4px);padding:5px 7px;color:#fff;background:#244f70;border-radius:8px;font-size:10px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .15s,transform .15s;box-shadow:0 3px 8px #091e301f}
+#weeklyBars .bar-column:hover .v15-bar-tip,#weeklyBars .bar-column:focus-within .v15-bar-tip,#weeklyBars .bar-column:active .v15-bar-tip{opacity:1;transform:translateX(-50%) translateY(0)}
+#homePage .v142-stat-new{background:linear-gradient(145deg,#edf6fc,#f8fafd)!important}
+body.dark-mode #homePage .v142-stat-new{background:linear-gradient(145deg,#254457,#273b4c)!important}
+#homePage #homeMonthlyTotal{font-size:26px}
+/* History: subtle emblem and intentionally calm insight cards. */
+.v15-icon-header{position:relative;padding-right:55px}
+.v15-history-mark{position:absolute;top:10px;right:0;display:grid;place-items:center;width:46px;height:46px;border-radius:15px;background:linear-gradient(135deg,#e0eff9,#edf7fc);color:var(--blue)}
+body.dark-mode .v15-history-mark{background:linear-gradient(130deg,#305268,#2b4357);color:#b6def6}
+#historyPage .insights-summary-item{padding:18px!important;display:flex;align-items:flex-start;flex-direction:column;gap:5px;min-height:123px;justify-content:center}
+#historyPage .insights-summary-item:nth-child(n){background:linear-gradient(145deg,#edf6fd,#fafcff)!important;border:0!important}
+#historyPage .insights-summary-item:nth-child(2){background:linear-gradient(145deg,#e9f3fc,#f7f9ff)!important}
+#historyPage .insights-summary-item:nth-child(3){background:linear-gradient(145deg,#eaf3fa,#f5faff)!important}
+body.dark-mode #historyPage .insights-summary-item:nth-child(n){background:linear-gradient(145deg,#2b4558,#28394a)!important}
+#historyPage .insights-summary-item small{letter-spacing:.6px}
+#historyPage .insights-summary-item strong{font-size:16px;line-height:1.25;overflow-wrap:anywhere}
+.v15-trend-accordion{margin-bottom:22px}
+.v15-trend-accordion .history-trend-toggle{margin:0!important}
+.v15-trend-accordion .history-trend-button{width:100%;padding:19px;border-radius:18px!important;background:var(--white);color:var(--text);box-shadow:none;border:1px solid var(--border)}
+.v15-trend-accordion .history-trend-panel{margin-top:12px!important}
+/* Six time-of-day buckets use existing segmented mode switch. */
+#timeOfDayInsights .time-insights-row{margin-bottom:16px}
+/* Drink swatches and optional volume fields */
+.v15-palette{margin:15px 0 17px}
+.v15-field-title{display:block;font-size:12px;font-weight:800;color:var(--text);margin-bottom:11px}
+.v15-swatches{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.v15-swatch{appearance:none;border:2px solid transparent;width:37px;height:37px;padding:0;border-radius:13px;background:var(--swatch);box-shadow:inset 0 0 0 4px rgba(255,255,255,.18);transition:transform .15s}
+.v15-swatch.chosen{outline:2px solid var(--text);outline-offset:3px;transform:translateY(-1px)}
+.v15-swatch:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
+.v15-ounces-label{margin-top:17px!important}
+.v15-ounces-label small{color:var(--muted);font-weight:500}
+.v15-ounces{width:100%;min-width:0;display:block;margin-top:5px;padding:12px 14px;border:1px solid var(--border);border-radius:12px;background:var(--background);color:var(--text);font-size:16px}
+.v15-ounces:focus{outline:2px solid var(--blue);outline-offset:1px}
+.my-drink-bolt.v15-custom-can{display:grid!important;place-items:center!important;background:color-mix(in srgb,var(--drink-tint) 16%,var(--white))!important;border-radius:14px}
+.my-drink-bolt.v15-custom-can:before{display:none!important}
+.v15-custom-can .v142-can-illustration,.v15-custom-can .v142-can-illustration:before{border-color:var(--drink-tint)!important}
+.v15-custom-can .v142-can-illustration:after{color:var(--drink-tint)!important}
+/* Clock: single easy-to-grab half-hour time slider on both forms. */
+.v15-time-field{margin:17px 0 19px;padding:17px 15px 13px;border-radius:18px;background:linear-gradient(145deg,#eaf4fc,#f6faff);border:1px solid rgba(107,170,215,.12)}
+body.dark-mode .v15-time-field{background:linear-gradient(140deg,#294459,#263746);border-color:#405970}
+.v15-time-top{display:flex;align-items:center;justify-content:space-between;gap:9px;margin-bottom:18px}
+.v15-time-top label{font-size:12px;font-weight:800;color:var(--muted)}
+.v15-time-top output{font-size:19px;font-weight:850;color:var(--text);letter-spacing:-.4px}
+.v15-time-range{display:block;appearance:none;-webkit-appearance:none;width:100%;height:9px;margin:0;cursor:pointer;border-radius:12px;background:linear-gradient(to right,#4a95cb 0%,#75beef var(--clock-fill,50%),rgba(81,135,178,.17) var(--clock-fill,50%),rgba(81,135,178,.17) 100%);touch-action:pan-y}
+.v15-time-range::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:26px;height:26px;border:4px solid #fff;border-radius:50%;background:#337bb5;box-shadow:0 2px 7px #153b5d55}
+.v15-time-range::-moz-range-thumb{width:20px;height:20px;border:4px solid #fff;border-radius:50%;background:#337bb5;box-shadow:0 2px 7px #153b5d55}
+.v15-time-ticks{display:flex;justify-content:space-between;gap:2px;margin:15px -5px 0;font-size:9px;font-weight:750;color:var(--muted)}
+.v15-time-help{text-align:center;margin:12px 0 0;font-size:11px;color:var(--muted)}
+/* Progress heading avoids redundant "Your progress" */
+#progressPage .achievements-section h2{letter-spacing:-.45px}
+/* small screens */
+@media(max-width:375px){.v15-swatches{gap:9px}.v15-swatch{width:33px;height:33px}#historyPage .insights-summary-item{padding:13px!important}}
+
+/* ===== END v15-features.css ===== */
+
+/* ===== BEGIN v152-history.css ===== */
+/* v1.5.2: Trend uses the same generated history-fold component as other insights. */
+#historyPage #historyTrendSection.history-fold-section { margin-top: 12px; margin-bottom: 12px; }
+#historyPage #historyTrendSection .history-chart-card { border: 0 !important; box-shadow: none !important; background: transparent !important; padding: 4px 0 0 !important; margin: 0 !important; }
+#historyPage #historyTrendSection .history-fold-content { padding: 0 16px 18px; }
+#historyPage #historyTrendSection .history-fold-header { padding: 18px; }
+
+/* Consistent History dropdown spacing */
+
+#historyPage .history-fold-section,
+#historyPage #historyTrendSection.history-fold-section {
+    margin: 0 0 22px !important;
+    border-radius: 20px;
+}
+
+/* Remove unwanted focus outline after clicking */
+
+#historyPage .history-fold-header:focus:not(:focus-visible) {
+    outline: none;
+}
+
+/* Keep a subtle outline for keyboard accessibility */
+
+#historyPage .history-fold-header:focus-visible {
+    outline: 2px solid rgba(150, 200, 235, 0.6);
+    outline-offset: -3px;
+    border-radius: 18px;
+}
+/* Remove decorative icons from Home and History */
+
+#homePage .v14-hero-icon,
+#historyPage .v15-history-mark {
+    display: none !important;
+}
+/* ===== END v152-history.css ===== */
+
+
+/* ===== v1.5.3 — per-log flavors and on-focus suggestions ===== */
+.flavor-field { position:relative; margin:12px 0 14px; }
+.flavor-field .logger-label small { font-weight:500; font-size:11px; letter-spacing:0; text-transform:none; }
+.flavor-field .flavor-input { margin:0; min-height:46px; }
+.flavor-suggestions {position:absolute;z-index:115;top:calc(100% + 5px);left:0;right:0;background:var(--white);border:1px solid var(--border);border-radius:15px;box-shadow:0 14px 35px rgba(18,40,65,.16);padding:7px;max-height:215px;overflow:auto;}
+.flavor-suggestions.hidden{display:none!important;}
+.flavor-suggestions-heading {font-size:10px;font-weight:800;letter-spacing:.9px;color:var(--muted);padding:8px 10px;}
+.flavor-suggestions button {width:100%;background:transparent;color:var(--text);display:flex;justify-content:space-between;gap:10px;padding:11px 10px;text-align:left;border-radius:10px;}
+.flavor-suggestions button:hover,.flavor-suggestions button:focus-visible {background:var(--v14-soft,var(--blue-light));}
+.flavor-suggestions button small {color:var(--muted);}
+.my-drink-card { flex-wrap:wrap; }
+.drink-flavor-breakdown { flex-basis:100%;width:100%;min-width:0;margin-top:4px;padding-top:12px;border-top:1px solid var(--v14-hairline,rgba(127,145,160,.15)); }
+.drink-flavor-breakdown summary {display:flex;align-items:center;gap:8px;justify-content:space-between;list-style:none;cursor:pointer;color:var(--text);font-size:12px;font-weight:750;padding:4px 0;}
+.drink-flavor-breakdown summary::-webkit-details-marker {display:none;}
+.drink-flavor-breakdown summary::after{content:'⌄';font-size:18px;color:var(--blue);margin-left:3px;}
+.drink-flavor-breakdown[open] summary::after {content:'⌃';}
+.drink-flavor-breakdown summary span {margin-left:auto;font-size:11px;color:var(--muted);font-weight:500;}
+.flavor-breakdown-inner {padding:12px 0 1px;display:grid;gap:12px;}
+.flavor-count-row>div:first-child {display:flex;justify-content:space-between;gap:12px;font-size:12px;color:var(--text);margin-bottom:6px;}
+.flavor-count-row strong {font-variant-numeric:tabular-nums;}
+.flavor-count-bar {height:6px;border-radius:100px;background:var(--v14-soft,var(--blue-light));overflow:hidden;}
+.flavor-count-bar span {display:block;height:100%;border-radius:100px;background:linear-gradient(90deg,#82c4ed,#467fb9);}
+
+/* v1.5.4 — Focused, period-aware History graphs */
+.v154-period-note{display:flex;align-items:center;justify-content:flex-end;gap:7px;margin:0 1px 13px;color:var(--muted);font-size:10px;letter-spacing:.1px}
+.v154-period-note strong{font-weight:750;color:var(--blue);border-radius:20px;padding:5px 9px;background:var(--v14-soft,var(--blue-light))}
+.v154-hourly-plot{padding:22px 6px 0;min-width:0}
+.v154-hourly-bars{height:170px;display:flex;gap:2px;align-items:end;border-bottom:1px solid var(--border);background:repeating-linear-gradient(to top,transparent 0,transparent calc(25% - 1px),var(--v14-hairline,rgba(30,70,100,.09)) calc(25% - 1px),var(--v14-hairline,rgba(30,70,100,.09)) 25%)}
+.v154-hourly-column{height:100%;flex:1;min-width:0;display:flex;align-items:end;justify-content:center}
+.v154-hourly-bar{width:100%;max-width:32px;border-radius:6px 6px 0 0;background:linear-gradient(180deg,#8acaf1,#377da9);min-height:0;transition:filter .15s}
+.v154-hourly-bar[style*="height: 0%"]{opacity:0;pointer-events:none}
+.v154-hourly-bar:hover,.v154-hourly-bar:focus-visible,.v154-weekday-bar:hover,.v154-weekday-bar:focus-visible{filter:brightness(1.16);outline:2px solid #91cef6;outline-offset:2px}
+.v154-hourly-axis{height:30px;position:relative;margin:9px 0 0}
+.v154-hourly-axis span{position:absolute;top:0;transform:translateX(-50%);font-size:9px;white-space:nowrap;color:var(--muted);font-weight:650}
+.v154-hourly-axis span:first-child{transform:none}
+.v154-hourly-axis span:last-child{transform:translateX(-100%)}
+.v154-weekday-chart{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px;align-items:end;padding:16px 4px 4px}
+.v154-weekday-col{min-width:0;display:flex;flex-direction:column;align-items:center;gap:7px}
+.v154-weekday-value{font-size:10px;font-weight:750;color:var(--text);white-space:nowrap}
+.v154-weekday-track{height:156px;width:100%;display:flex;align-items:end;justify-content:center;border-bottom:1px solid var(--border);background:linear-gradient(to top,var(--v14-hairline,rgba(60,100,140,.07)),transparent);border-radius:8px 8px 0 0}
+.v154-weekday-bar{width:min(32px,82%);min-height:0;border-radius:8px 8px 0 0;background:linear-gradient(180deg,#abdffa,#4a91c5);transition:filter .15s}
+.v154-weekday-label{font-size:10px;font-weight:700;color:var(--muted)}
+.v154-chart-help{text-align:center;margin:13px 0 0;color:var(--muted);font-size:10px;line-height:1.5}
+#mostLoggedDrinks .drink-insights-bar{background:linear-gradient(90deg,#75b9e7,#377fac)}
+@media(max-width:370px){.v154-weekday-chart{gap:4px}.v154-weekday-value{font-size:9px}.v154-hourly-axis span{font-size:8px}}
+
+
+/* Time of Day: show mg above caffeine bars */
+
+.v154-hourly-column {
+    position: relative;
+}
+
+.v154-caffeine-amount {
+    position: absolute;
+    bottom: calc(var(--bar-height, 0%) + 6px);
+    left: 50%;
+    transform: translateX(-50%);
+
+    color: var(--text);
+    font-size: 10px;
+    font-weight: 700;
+    white-space: nowrap;
+    pointer-events: none;
+}
+
+/* History Year: visible, but unavailable until day 365 of commitment. */
+#historyPage .history-range-button[data-range="year"]:disabled {
+    opacity: .36 !important;
+    cursor: not-allowed !important;
+    filter: grayscale(.65);
+    box-shadow: none !important;
+    pointer-events: none;
+}
+#historyPage .history-range-button[data-range="year"]:disabled:focus-visible {
+    outline: none;
+}
+
+/* v1.5.7 — compact History cards and readable weekday chart on phones */
+@media (max-width: 600px) {
+    /* The seven weekday columns must each own their numeric label. */
+    #historyPage .v154-weekday-chart {
+        gap: 3px;
+        padding-left: 0;
+        padding-right: 0;
+    }
+    #historyPage .v154-weekday-col { min-width: 0; width: 100%; gap: 7px; }
+    #historyPage .v154-weekday-value {
+        width: 100%;
+        min-width: 0;
+        text-align: center;
+        font-size: 0; /* preserve full mg text for assistive technology */
+        white-space: nowrap;
+        font-variant-numeric: tabular-nums;
+    }
+    #historyPage .v154-weekday-value::after {
+        content: attr(data-mobile-value);
+        display: block;
+        font-size: clamp(10px, 2.7vw, 12px);
+        font-weight: 750;
+        line-height: 1.2;
+    }
+    #historyPage .v154-weekday-label { font-size: 10px; }
+
+    /* Reduce the height of the three At a Glance cards. */
+    #historyPage .insights-summary-grid {
+        grid-template-columns: 1fr;
+        gap: 9px;
+    }
+    #historyPage .insights-summary-item {
+        min-height: 0;
+        padding: 13px 16px !important;
+        gap: 3px;
+        border-radius: 16px !important;
+    }
+    #historyPage .insights-summary-item small { font-size: 10px; line-height: 1.25; }
+    #historyPage .insights-summary-item strong { font-size: 17px; line-height: 1.2; }
+    #historyPage .insights-summary-item > span:last-child { font-size: 11px; line-height: 1.3; }
+
+    /* Compact the date picker / Log section, without shrinking tap targets. */
+    #historyPage .past-log-button {
+        padding: 15px !important;
+        gap: 7px 10px;
+        border-radius: 18px !important;
+    }
+    #historyPage .past-log-button .past-date-row {
+        margin-top: 8px;
+        gap: 8px;
+    }
+    #historyPage .past-log-button #pastDrinkDate {
+        min-height: 44px;
+        padding: 9px 12px;
+        font-size: 15px;
+        border-radius: 12px !important;
+    }
+    #historyPage .past-log-button .past-date-button {
+        min-height: 44px;
+        padding: 9px 12px;
+        font-size: 15px;
+        border-radius: 12px !important;
+    }
+}
+
+/* v1.5.8 — restore the proven iPhone/WebKit calendar overflow fix.
+   Web Inspector previously showed the native date input ~30px wider
+   than its available row; reserve that space without changing its behavior. */
+@media (max-width: 600px) {
+  #historyPage .past-log-button .past-date-row {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+  #historyPage .past-log-button #pastDrinkDate {
+    box-sizing: border-box !important;
+    display: block !important;
+    width: calc(100% - 30px) !important;
+    max-width: calc(100% - 30px) !important;
+    min-width: 0 !important;
+    margin-inline: auto !important;
+    appearance: auto;
+    -webkit-appearance: auto;
+    text-align: center !important;
+  }
 }

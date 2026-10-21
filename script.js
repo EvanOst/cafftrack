@@ -1,5 +1,58 @@
+
+/* CaffTrack 1.5: optional drink decoration and exact 30-minute time. */
+const V15_COLORS = Object.freeze({blue:'#659fcb',purple:'#a282d2',pink:'#e39ac2',teal:'#59abb0',coral:'#e39b86',gold:'#caa45b'});
+let v15SelectedColors = {log:'blue',savedDrink:'blue',editSavedDrink:'blue',editDrink:'blue'};
+function chooseDrinkColor(form, color) {
+    if (!Object.hasOwn(V15_COLORS,color)) return;
+    v15SelectedColors[form] = color;
+    document.querySelectorAll(`[data-palette="${form}"] .v15-swatch`).forEach(btn=>{
+        const active = btn.dataset.color === color;
+        btn.classList.toggle('chosen',active);
+        btn.setAttribute('aria-pressed',String(active));
+    });
+}
+function v15Ounces(id) {
+    const el=document.getElementById(id+'Ounces');
+    const raw=el?.value?.trim();
+    if (!raw) return null;
+    const value=Number(raw);
+    if(!Number.isFinite(value)||value<=0||value>256){alert('Ounces must be between 0.1 and 256, or left blank.');return false;}
+    return Math.round(value*10)/10;
+}
+function v15ClockText(slot){
+    slot=Math.max(0,Math.min(47,Number(slot)||0));
+    const h=Math.floor(slot/2),m=slot%2? '30':'00';
+    return `${h%12||12}:${m} ${h<12?'AM':'PM'}`;
+}
+function updateClockLabel(prefix){
+    const input=document.getElementById(prefix+'Clock');
+    const output=document.getElementById(prefix+'TimeLabel');
+    if(input&&output){output.textContent=v15ClockText(input.value);input.style.setProperty('--clock-fill',`${Number(input.value)/47*100}%`);}
+}
+function v15SetClock(prefix,slot){
+    const el=document.getElementById(prefix+'Clock');
+    if(el){el.value=String(Math.max(0,Math.min(47,slot)));updateClockLabel(prefix);}
+}
+function v15NowSlot(){const d=appDate();return Math.min(47,Math.floor((d.getHours()*60+d.getMinutes()+15)/30));}
+function v15LegacySlot(entry){
+    const t=String(entry?.timeOfDay||'').toLowerCase();
+    return t==='morning'?18:t==='afternoon'?26:t==='night'?34:null;
+}
+function v15EntrySlot(entry){
+    if(Number.isInteger(entry?.timeSlot)&&entry.timeSlot>=0&&entry.timeSlot<=47)return entry.timeSlot;
+    return v15LegacySlot(entry);
+}
+function v15Period(slot){const h=Math.floor(slot/2);return h<12?'morning':h<18?'afternoon':'night';}
+function v15SavedByName(name){return getMyDrinks().find(d=>normalizeDrinkName(d.name)===normalizeDrinkName(name));}
+function v15FillLoggerFromDrink(drink){
+    if(!drink)return;
+    chooseDrinkColor('log',Object.hasOwn(V15_COLORS,drink.color)?drink.color:'blue');
+    const oz=document.getElementById('logOunces');if(oz)oz.value=drink.ounces??'';
+}
+function v15ValidateOunces(form){const result=v15Ounces(form);return result!==false;}
+
 const STORAGE_KEY = "caffTrackData";
-const APP_VERSION = "1.3.4 Beta";
+const APP_VERSION = "1.5.5 Beta";
 const MAX_CAFFEINE_PER_DRINK = 999;
 
 let data = loadData();
@@ -224,6 +277,7 @@ function showPage(page) {
     if (page === "history") {
         renderHistory();
         preparePastDatePicker();
+        refreshVisibleHistoryTrend();
     }
 
 if (page === "drinks") {
@@ -257,9 +311,12 @@ function openLogger(selectedDate = null) {
             dateKey(new Date());
     }
 
-    selectTimeOfDay(
-        getSuggestedTimeOfDay()
-    );
+    document.getElementById('logFlavor').value='';
+    hideFlavorSuggestions();
+    hideDrinkSuggestions();
+    v15SetClock('log',v15NowSlot());
+    chooseDrinkColor('log','blue');
+    document.getElementById('logOunces').value='';
 
     clearAmountSelection();
 
@@ -275,9 +332,8 @@ function openLogger(selectedDate = null) {
             document.getElementById("drinkName");
 
       if (input) {
-    input.focus();
-
-    showDrinkSuggestions();
+    // Suggestions open only when the person taps into the name field.
+    hideDrinkSuggestions();
 }
     }, 100);
 }
@@ -358,8 +414,10 @@ if (
         dateInput.value ||
         dateKey(appDate());
 
-    const timeOfDay =
-        getSelectedTimeOfDay();
+    const timeSlot = Number(document.getElementById('logClock').value);
+    const timeOfDay = v15Period(timeSlot);
+    const ounces=v15Ounces('log');
+    if(ounces===false)return;
 
     const day =
         getDayData(selectedDate);
@@ -375,8 +433,11 @@ if (
         amount:
             amount,
 
-        timeOfDay:
-            timeOfDay
+        timeOfDay:timeOfDay,
+        timeSlot:timeSlot,
+        color:v15SelectedColors.log,
+        ounces:ounces,
+        flavor:document.getElementById('logFlavor')?.value.trim().slice(0,60) || ''
     });
 
     day.caffeine =
@@ -420,6 +481,8 @@ if (
             amount:
                 amount,
 
+            color:v15SelectedColors.log,
+            ounces:ounces,
             createdAt:
                 Date.now()
         });
@@ -430,6 +493,8 @@ if (
 saveData();
 
     closeLogger();
+    document.getElementById('logFlavor').value='';
+    hideFlavorSuggestions();
 
     nameInput.value = "";
 
@@ -617,11 +682,11 @@ function editDrink(dayKey, id) {
 
     document.getElementById("editDrinkError").textContent = "";
 
-    selectEditDrinkTime(
-        ["morning", "afternoon", "night"].includes(drink.timeOfDay)
-            ? drink.timeOfDay
-            : "morning"
-    );
+    v15SetClock('editDrink',v15EntrySlot(drink) ?? 18);
+    document.getElementById('editDrinkOunces').value=drink.ounces??'';
+    document.getElementById('editDrinkFlavor').value=drink.flavor || '';
+    hideFlavorSuggestions();
+    chooseDrinkColor('editDrink',Object.hasOwn(V15_COLORS,drink.color)?drink.color:'blue');
 
     document.getElementById("editDrinkOverlay")
         .classList.remove("hidden");
@@ -696,7 +761,13 @@ function saveEditedDrink(event) {
 
     drink.name = name;
     drink.amount = amount;
-    drink.timeOfDay = editingDrinkTime;
+    drink.flavor = document.getElementById('editDrinkFlavor')?.value.trim().slice(0,60) || '';
+    const ounces=v15Ounces('editDrink');
+    if(ounces===false)return;
+    drink.ounces=ounces;
+    drink.color=v15SelectedColors.editDrink;
+    drink.timeSlot=Number(document.getElementById('editDrinkClock').value);
+    drink.timeOfDay=v15Period(drink.timeSlot);
 
     day.caffeine = day.entries.reduce(
         (total, entry) => total + Number(entry.amount || 0),
@@ -871,8 +942,8 @@ function updateGreeting() {
 
     const text =
         name
-            ? `${greeting}, ${name}.`
-            : `${greeting}.`;
+            ? `${greeting}, ${name}!`
+            : `${greeting}!`;
 
     setText(
         "greeting",
@@ -936,7 +1007,7 @@ function updateEncouragement() {
 
     setText(
         "encouragementText",
-        message
+        message.replace(/^[^\p{L}\p{N}]+/u, "").trim()
     );
 }
 
@@ -1054,14 +1125,20 @@ if (!hasDrinksThisWeek) {
                     (
                         day.value /
                         max
-                    ) * 75
+                    ) * 125
                 );
 
         bar.style.height =
             height + "px";
 
-        bar.title =
-            day.value + " mg";
+        bar.title = `${day.date.toLocaleDateString('en-US',{weekday:'long',month:'short',day:'numeric'})}: ${day.value} mg`;
+        bar.tabIndex=0;
+        bar.setAttribute('role','img');
+        bar.setAttribute('aria-label',bar.title);
+        const tooltip=document.createElement('span');
+        tooltip.className='v15-bar-tip';
+        tooltip.textContent=`${day.value} mg`;
+        column.appendChild(tooltip);
 
         const label =
             document.createElement(
@@ -1069,7 +1146,9 @@ if (!hasDrinksThisWeek) {
             );
 
         label.textContent =
-            day.date
+            day.key === dateKey(appDate())
+                ? day.date.toLocaleDateString("en-US", {month:"numeric",day:"numeric"})
+                : day.date
                 .toLocaleDateString(
                     "en-US",
                     {
@@ -1304,6 +1383,50 @@ function weeklyAverage() {
    HISTORY
 ========================= */
 
+// History calculations begin at commitment, never on dates before tracking.
+function historyTrackingStart() {
+    const commitment = commitmentDate();
+    if (commitment && !Number.isNaN(commitment.getTime())) {
+        commitment.setHours(0, 0, 0, 0);
+        return commitment;
+    }
+    const keys = Object.keys(data.days || {}).sort();
+    return keys.length ? new Date(keys[0] + "T00:00:00") : new Date(appDate().getFullYear(), appDate().getMonth(), appDate().getDate());
+}
+
+function historyStartClamped(start) {
+    const first = historyTrackingStart();
+    return start < first ? new Date(first) : start;
+}
+
+function historyDaysSinceCommitment() {
+    const commitment = commitmentDate();
+    if (!commitment || Number.isNaN(commitment.getTime())) return 0;
+    const now = appDate();
+    const utcDay = date => Date.UTC(date.getFullYear(), date.getMonth(), date.getDate());
+    return Math.max(0, Math.floor((utcDay(now) - utcDay(commitment)) / 86400000));
+}
+
+function canUseHistoryYear() {
+    return Boolean(data.commitment) && historyDaysSinceCommitment() >= 365;
+}
+
+function updateHistoryYearAvailability() {
+    const yearButton = document.querySelector('.history-range-button[data-range="year"]');
+    if (yearButton) {
+        const available = canUseHistoryYear();
+        yearButton.disabled = !available;
+        yearButton.setAttribute('aria-disabled', String(!available));
+        yearButton.title = available ? 'Past 365 days' : 'Unlocks 365 days after your commitment';
+    }
+    if (historyRange === 'year' && !canUseHistoryYear()) {
+        historyRange = 'week';
+    }
+    document.querySelectorAll('.history-range-button').forEach(button => {
+        button.classList.toggle('active', button.dataset.range === historyRange);
+    });
+}
+
 function isDateInHistoryRange(key) {
     const date =
         new Date(key + "T00:00:00");
@@ -1314,7 +1437,7 @@ function isDateInHistoryRange(key) {
     date.setHours(0, 0, 0, 0);
     today.setHours(0, 0, 0, 0);
 
-    if (date > today) {
+    if (date > today || date < historyTrackingStart()) {
         return false;
     }
 
@@ -1377,6 +1500,8 @@ function setHistoryRange(range) {
         return;
     }
 
+    if (range === "year" && !canUseHistoryYear()) return;
+
     historyRange = range;
 
     document
@@ -1392,13 +1517,7 @@ function setHistoryRange(range) {
 
     renderHistory();
 
-    if (
-    !document
-        .getElementById("historyTrendPanel")
-        ?.classList.contains("hidden")
-) {
-    renderHistoryChart();
-}
+    refreshVisibleHistoryTrend();
 }
 
 function getHistoryRangeStats() {
@@ -1505,6 +1624,9 @@ function getHistoryRangeStats() {
         label = "ALL TIME";
         title = "All time";
     }
+
+    start = historyStartClamped(start);
+    if (previousStart) previousStart = historyStartClamped(previousStart);
 
     function calculateStats(
         rangeStart,
@@ -1722,12 +1844,8 @@ function renderHistoryChart() {
         }
     }
 
-    start.setHours(
-        0,
-        0,
-        0,
-        0
-    );
+    start = historyStartClamped(start);
+    start.setHours(0, 0, 0, 0);
 
 
     // =========================
@@ -2460,6 +2578,8 @@ function toggleHistoryTrend() {
         !willOpen
     );
 
+    button.setAttribute("aria-expanded", String(willOpen));
+
     const text =
         button.querySelector("span:first-child");
 
@@ -2478,6 +2598,20 @@ function toggleHistoryTrend() {
 if (willOpen) {
     renderHistoryChart();
 }
+}
+
+/* Redraw a restored, expanded Trend after History becomes visible. */
+function refreshVisibleHistoryTrend() {
+    const page = document.getElementById("historyPage");
+    const section = document.getElementById("historyTrendSection");
+    const content = section?.querySelector(".history-fold-content");
+    if (!page || page.classList.contains("hidden") ||
+        !content || content.hidden) return;
+    requestAnimationFrame(() => {
+        if (!page.classList.contains("hidden") && !content.hidden) {
+            renderHistoryChart();
+        }
+    });
 }
 
 /* =========================
@@ -2501,6 +2635,13 @@ function setupCollapsibleHistory() {
 
     const sections = [
         {
+            id: "trend",
+            selector: "#historyChart",
+            title: "Caffeine Trend",
+            subtitle: "See how your caffeine intake changes over time",
+            defaultOpen: false
+        },
+        {
             id: "weekday",
             selector: ".weekday-insights-card",
             title: "Day of the Week",
@@ -2511,7 +2652,7 @@ function setupCollapsibleHistory() {
             id: "timeofday",
             selector: ".time-insights-card",
             title: "Time of Day",
-            subtitle: "Morning, afternoon, and night",
+            subtitle: "When you usually log caffeine",
             defaultOpen: false
         },
         {
@@ -2598,12 +2739,27 @@ function setupCollapsibleHistory() {
             originalEyebrow.classList.add("history-fold-original-heading");
         }
 
+        // This period note is inside the collapsible body, never above the cards.
+        const periodNote = document.createElement("div");
+        periodNote.className = "v154-period-note";
+        periodNote.setAttribute("aria-label", "Selected History time period");
+        const periodPrefix = document.createElement("span");
+        periodPrefix.textContent = "Showing";
+        const periodValue = document.createElement("strong");
+        periodValue.className = "v154-period-value";
+        periodNote.append(periodPrefix, periodValue);
+        periodValue.textContent = ({week:"Past 7 days",month:"Past 30 days",year:"Past 365 days",all:"All time"})[historyRange] || "Selected period";
+        content.prepend(periodNote);
         content.hidden = !isOpen;
 
         header.addEventListener("click", () => {
             const willOpen = content.hidden;
 
             content.hidden = !willOpen;
+
+            if (config.id === "trend" && willOpen) {
+                renderHistoryChart();
+            }
 
             header.setAttribute(
                 "aria-expanded",
@@ -2727,10 +2883,9 @@ function renderMostLoggedDrinks() {
     return;
 }
 
-    const max = Math.max(
-        1,
-        ...ranked.map(drink => drink[metric])
-    );
+    const totalLogs = [...drinks.values()].reduce((sum, d) => sum + d.count, 0);
+    const totalMg = [...drinks.values()].reduce((sum, d) => sum + d.caffeine, 0);
+    const denominator = Math.max(1, metric === "count" ? totalLogs : totalMg);
 
     ranked.forEach(drink => {
         const row = document.createElement("div");
@@ -2744,8 +2899,8 @@ function renderMostLoggedDrinks() {
 
         const value = document.createElement("span");
         value.textContent = metric === "count"
-            ? `${drink.count} ${drink.count === 1 ? "time" : "times"}`
-            : `${drink.caffeine.toLocaleString()} mg`;
+            ? `${drink.count} ${drink.count === 1 ? "time" : "times"} · ${Math.round(drink.count / denominator * 100)}%`
+            : `${drink.caffeine.toLocaleString()} mg · ${Math.round(drink.caffeine / denominator * 100)}%`;
 
         heading.append(name, value);
 
@@ -2755,7 +2910,7 @@ function renderMostLoggedDrinks() {
         const bar = document.createElement("div");
         bar.className = "drink-insights-bar";
         bar.style.width =
-            `${(drink[metric] / max) * 100}%`;
+            `${(drink[metric] / denominator) * 100}%`;
 
         track.appendChild(bar);
         row.append(heading, track);
@@ -2785,104 +2940,95 @@ function setTimeInsightsMode(mode) {
 }
 
 function renderTimeOfDayInsights() {
-    const container =
-        document.getElementById("timeOfDayInsights");
-
+    const container = document.getElementById("timeOfDayInsights");
     if (!container) return;
-
-    const periods = [
-        { key: "morning", label: "Morning", icon: "☀️", count: 0, caffeine: 0 },
-        { key: "afternoon", label: "Afternoon", icon: "🌤️", count: 0, caffeine: 0 },
-        { key: "night", label: "Night", icon: "🌙", count: 0, caffeine: 0 }
-    ];
-
-    let unclassified = 0;
-
-    Object.entries(data.days || {}).forEach(([key, day]) => {
+    container.replaceChildren();
+    const slots = Array.from({length:48}, () => ({count:0,caffeine:0}));
+    let totalCount = 0;
+    Object.entries(data.days || {}).forEach(([key,day]) => {
         if (!isDateInHistoryRange(key)) return;
-        if (!Array.isArray(day.entries)) return;
-
-        day.entries.forEach(entry => {
-            const time = String(entry.timeOfDay || "")
-                .trim()
-                .toLowerCase();
-
-            const period = periods.find(p => p.key === time);
-
-            if (!period) {
-                unclassified++;
-                return;
-            }
-
-            period.count++;
-            period.caffeine += Number(entry.amount) || 0;
+        (day.entries || []).forEach(entry => {
+            const slot = v15EntrySlot(entry);
+            if (slot === null || slot < 0 || slot > 47) return;
+            slots[slot].count++;
+            slots[slot].caffeine += Number(entry.amount) || 0;
+            totalCount++;
         });
     });
-
-    container.replaceChildren();
-
+    if (!totalCount) {
+        showHistoryEmptyState(container,"Log drinks to discover what time you usually have caffeine.");
+        return;
+    }
+    // Display only the useful span; one hour of context on either side.
+    const active = slots.map((bin,i)=>bin.count ? i : -1).filter(i=>i>=0);
+    const firstHour = Math.max(0, Math.floor(active[0]/2)-1);
+    const lastHour = Math.min(24, Math.floor(active[active.length-1]/2)+2);
     const metric = timeInsightsMode;
+    const plot = document.createElement("div");
+    plot.className = "v154-hourly-plot";
+    plot.setAttribute("role","img");
+    plot.setAttribute("aria-label", `Caffeine ${metric==='count'?'drink counts':'amounts'} by half-hour, from ${v154HourLabel(firstHour)} to ${v154HourLabel(lastHour)}`);
+    const visible = slots.slice(firstHour*2, lastHour*2);
+    const max = Math.max(1,...visible.map(bin=>bin[metric]));
+    const bars = document.createElement("div");
+    bars.className = "v154-hourly-bars";
+    visible.forEach((bin,i) => {
+        const slot = firstHour*2+i;
+        const column = document.createElement("div");
+        column.className = "v154-hourly-column";
+        const bar = document.createElement("div");
+        bar.className = "v154-hourly-bar";
+        bar.style.height = `${bin[metric] ? Math.max(6,bin[metric]/max*100) : 0}%`;
+        column.style.setProperty(
+    "--bar-height",
+    `${bin[metric] ? Math.max(6, bin[metric] / max * 100) : 0}%`
+);
 
-    const total = periods.reduce(
-        (sum, period) => sum + period[metric],
-        0
-    );
 
-   if (total === 0) {
-    showHistoryEmptyState(
-        container,
-        "Log drinks with a time of day to discover your daily habits."
-    );
-    return;
+if (bin[metric] > 0) {
+    const amountLabel = document.createElement("span");
+    amountLabel.className = "v154-caffeine-amount";
+
+    amountLabel.textContent =
+        metric === "caffeine"
+            ? `${bin.caffeine} mg`
+            : `${bin.count}`;
+
+    column.appendChild(amountLabel);
 }
 
-    const max = Math.max(
-        1,
-        ...periods.map(period => period[metric])
-    );
 
-    periods.forEach(period => {
-        const row = document.createElement("div");
-        row.className = "time-insights-row";
-
-        const heading = document.createElement("div");
-        heading.className = "time-insights-heading";
-
-        const label = document.createElement("strong");
-        label.textContent = `${period.icon} ${period.label}`;
-
-        const value = document.createElement("span");
-        value.textContent = metric === "count"
-            ? `${period.count} ${period.count === 1 ? "drink" : "drinks"}`
-            : `${period.caffeine.toLocaleString()} mg`;
-
-        heading.append(label, value);
-
-        const track = document.createElement("div");
-        track.className = "time-insights-track";
-
-        const bar = document.createElement("div");
-        bar.className = "time-insights-bar";
-        bar.style.width = `${period[metric] / max * 100}%`;
-
-        track.appendChild(bar);
-
-        const percentage = document.createElement("small");
-        percentage.className = "time-insights-percentage";
-        percentage.textContent =
-            `${Math.round(period[metric] / total * 100)}% of ${metric === "count" ? "drinks" : "caffeine"}`;
-
-        row.append(heading, track, percentage);
-        container.appendChild(row);
+        bar.title = `${v15ClockText(slot)} — ${metric==='count'?`${bin.count} drink${bin.count===1?'':'s'}`:`${bin.caffeine} mg`}`;
+        bar.tabIndex = 0;
+        bar.setAttribute("aria-label",bar.title);
+        column.appendChild(bar);
+        bars.appendChild(column);
     });
-
-    if (unclassified > 0) {
-        const note = document.createElement("p");
-        note.className = "time-insights-note";
-        note.textContent =
-            `${unclassified} older ${unclassified === 1 ? "entry has" : "entries have"} no time-of-day category and ${unclassified === 1 ? "is" : "are"} excluded.`;
-        container.appendChild(note);
+    plot.appendChild(bars);
+    const axis = document.createElement("div");
+    axis.className = "v154-hourly-axis";
+    // Labels are evenly positioned at actual hour boundaries.
+    const hours = lastHour-firstHour;
+    const step = hours > 12 ? 3 : hours > 7 ? 2 : 1;
+    for(let hour=firstHour;hour<=lastHour;hour+=step) {
+        const tick = document.createElement("span");
+        tick.textContent = v154HourLabel(hour);
+        tick.style.left = `${((hour-firstHour)*2+0.5)/(hours*2)*100}%`;
+        axis.appendChild(tick);
     }
+    if ((lastHour-firstHour)%step !== 0) {
+        const last = document.createElement("span");last.textContent=v154HourLabel(lastHour);
+        last.style.left="calc(100% - 1px)";;axis.appendChild(last);
+    }
+    plot.appendChild(axis);
+    container.appendChild(plot);
+    const hint=document.createElement("p");hint.className="v154-chart-help";
+    hint.textContent="Select a bar to see the amount at that time · Each bar is 30 minutes";
+    container.appendChild(hint);
+}
+function v154HourLabel(hour) {
+    if(hour===24)return "12 AM";
+    return `${hour%12 || 12} ${hour<12?'AM':'PM'}`;
 }
 
 /* =========================
@@ -2934,17 +3080,9 @@ function renderWeekdayInsights() {
     } else if (historyRange === "year") {
         start.setDate(start.getDate() - 364);
     } else {
-        const dates = Object.keys(data.days || {})
-            .filter(key => isDateInHistoryRange(key))
-            .sort();
-
-        if (dates.length === 0) {
-            container.textContent = "No history available yet.";
-            return;
-        }
-
-        start = new Date(dates[0] + "T00:00:00");
+        start = historyTrackingStart();
     }
+    start = historyStartClamped(start);
 
     // Count every calendar day, including caffeine-free days.
     const cursor = new Date(start);
@@ -2991,44 +3129,30 @@ if (!hasLoggedCaffeine) {
     return;
 }
 
-weekdays.forEach((day, index) => {
-        const value = values[index];
-        const row = document.createElement("div");
-        row.className = "weekday-insights-row";
-
-        const heading = document.createElement("div");
-        heading.className = "weekday-insights-heading";
-
-        const label = document.createElement("strong");
-        label.textContent = day.label;
-
-        const amount = document.createElement("span");
-
-        amount.textContent = metric === "caffeine"
-            ? `${Math.round(value)} mg/day`
-            : `${day.count} ${day.count === 1 ? "drink" : "drinks"}`;
-
-        heading.append(label, amount);
-
-        const track = document.createElement("div");
-        track.className = "weekday-insights-track";
-
-        const bar = document.createElement("div");
-        bar.className = "weekday-insights-bar";
-        bar.style.width = `${(value / max) * 100}%`;
-
-        track.appendChild(bar);
-
-        const detail = document.createElement("small");
-        detail.className = "weekday-insights-detail";
-
-        detail.textContent = metric === "caffeine"
-            ? `Across ${day.days} ${day.days === 1 ? "day" : "days"}`
-            : `${day.days} ${day.days === 1 ? "day" : "days"} in selected period`;
-
-        row.append(heading, track, detail);
-        container.appendChild(row);
-    });
+const chart = document.createElement("div");
+chart.className = "v154-weekday-chart";
+chart.setAttribute("aria-label",metric === 'caffeine' ? 'Average caffeine by weekday' : 'Total drinks logged by weekday');
+weekdays.forEach((day,index) => {
+    const value=values[index];
+    const col=document.createElement("div");col.className="v154-weekday-col";
+    const number=document.createElement("span");number.className="v154-weekday-value";
+    number.textContent=metric==='caffeine'?`${Math.round(value)} mg`:`${day.count}`;
+    // Narrow screens display the number only; the full mg value stays accessible.
+    number.dataset.mobileValue=metric==='caffeine'?String(Math.round(value)):String(day.count);
+    const plot=document.createElement("div");plot.className="v154-weekday-track";
+    const bar=document.createElement("div");bar.className="v154-weekday-bar";
+    bar.style.height=`${value ? Math.max(5,value/max*100) : 0}%`;
+    bar.title=`${day.label}: ${metric==='caffeine'?`${Math.round(value)} mg/day`:`${day.count} drinks`} (across ${day.days} days)`;
+    bar.tabIndex=0;bar.setAttribute("aria-label",bar.title);
+    plot.appendChild(bar);
+    const label=document.createElement("span");label.className="v154-weekday-label";
+    label.textContent=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'][index];
+    col.append(number,plot,label);chart.appendChild(col);
+});
+container.appendChild(chart);
+const footer=document.createElement('p');footer.className='v154-chart-help';
+footer.textContent=metric==='caffeine'?'Average mg per calendar day, including caffeine-free days':'Total drinks on each weekday in the selected period';
+container.appendChild(footer);
 }
 
 /* =========================
@@ -3072,6 +3196,7 @@ function renderInsightsSummary() {
         start = new Date(recordedDates[0] + "T00:00:00");
     }
 
+    start = historyStartClamped(start);
     const hasHistory = recordedDates.length > 0;
 
     if (hasHistory) {
@@ -3112,7 +3237,7 @@ function renderInsightsSummary() {
 
             drinks.get(normalized).count++;
 
-            const time = String(entry.timeOfDay || "")
+            const time = Number.isInteger(entry.timeSlot) ? v15Period(entry.timeSlot) : String(entry.timeOfDay || "")
                 .toLowerCase();
 
             if (Object.hasOwn(periods, time)) {
@@ -3219,6 +3344,9 @@ function showHistoryEmptyState(container, message) {
 }
 
 function renderHistory() {
+    updateHistoryYearAvailability();
+    const periodName = ({week:"Past 7 days",month:"Past 30 days",year:"Past 365 days",all:"All time"})[historyRange] || "Selected period";
+    document.querySelectorAll(".v154-period-value").forEach(el => { el.textContent = periodName; });
     renderMostLoggedDrinks();
     renderTimeOfDayInsights();
     renderWeekdayInsights();
@@ -3407,10 +3535,8 @@ function renderHistory() {
                         "🌙 Night"
                 };
 
-                const timeLabel =
-                    timeLabels[
-                        entry.timeOfDay
-                    ] || "";
+                const slot = v15EntrySlot(entry);
+                const timeLabel = slot===null ? '' : v15ClockText(slot);
 
                 drink.innerHTML = `
                     <div>
@@ -3425,7 +3551,7 @@ function renderHistory() {
                         <small>
                             ${Number(
                                 entry.amount || 0
-                            )} mg
+                            )} mg${entry.ounces ? ` · ${entry.ounces} oz` : ''}${entry.flavor ? ` · ${escapeHTML(entry.flavor)}` : ''}
                             ${
                                 timeLabel
                                     ? " · " +
@@ -4764,6 +4890,8 @@ function openNewSavedDrink() {
     }
 
     modal.classList.add("active");
+    document.getElementById('savedDrinkOunces').value='';
+    chooseDrinkColor('savedDrink','blue');
 
     setTimeout(() => {
         if (nameInput) {
@@ -4845,7 +4973,10 @@ function saveNewDrink() {
         return;
     }
 
+    const ounces=v15Ounces('savedDrink');if(ounces===false)return;
     drinks.push({
+        color:v15SelectedColors.savedDrink,
+        ounces:ounces,
         id:
             Date.now().toString() +
             Math.random(),
@@ -4952,6 +5083,62 @@ function setMyDrinksSort(sort) {
 }
 
 
+/* Flavor notes belong to individual log entries, not My Drinks templates. */
+function flavorCountsForDrink(name) {
+    const counts = new Map();
+    Object.values(data.days || {}).forEach(day => {
+        (day.entries || []).forEach(entry => {
+            if (normalizeDrinkName(entry.name) !== normalizeDrinkName(name)) return;
+            const flavor = String(entry.flavor || '').trim() || 'Unspecified';
+            const key = flavor.toLocaleLowerCase();
+            const old = counts.get(key);
+            if (old) old.count++;
+            else counts.set(key, {name:flavor, count:1});
+        });
+    });
+    return [...counts.values()].sort((a,b)=>b.count-a.count || a.name.localeCompare(b.name));
+}
+function renderFlavorBreakdown(drink) {
+    const counts = flavorCountsForDrink(drink.name);
+    if (!counts.length) return '';
+    const total = counts.reduce((n,x)=>n+x.count,0);
+    const id = 'flavors-' + String(drink.id).replace(/[^a-zA-Z0-9_-]/g,'');
+    return `<details class="drink-flavor-breakdown" id="${id}"><summary>Flavor breakdown <span>${total} logs</span></summary><div class="flavor-breakdown-inner">${counts.map(x=>`<div class="flavor-count-row"><div><span>${escapeHTML(x.name)}</span><strong>${x.count}</strong></div><div class="flavor-count-bar"><span style="width:${x.count/total*100}%"></span></div></div>`).join('')}</div></details>`;
+}
+function matchingFlavorSuggestions(name, query) {
+    const matching = new Map();
+    Object.values(data.days || {}).forEach(day => (day.entries || []).forEach(entry => {
+        const flavor = String(entry.flavor || '').trim();
+        if (!flavor || normalizeDrinkName(entry.name) !== normalizeDrinkName(name)) return;
+        if (!flavor.toLocaleLowerCase().includes(query.toLocaleLowerCase())) return;
+        const key=flavor.toLocaleLowerCase();
+        matching.set(key,{name:flavor,count:(matching.get(key)?.count || 0)+1});
+    }));
+    return [...matching.values()].sort((a,b)=>b.count-a.count).slice(0,6);
+}
+function hideFlavorSuggestions() {
+    document.querySelectorAll('.flavor-suggestions').forEach(el=>el.classList.add('hidden'));
+    document.querySelectorAll('.flavor-input').forEach(el=>el.setAttribute('aria-expanded','false'));
+}
+function showFlavorSuggestions(id) {
+    hideFlavorSuggestions();
+    const input=document.getElementById(id);
+    const dropdown=document.getElementById(id+'Suggestions');
+    const name=document.getElementById(id==='logFlavor'?'drinkName':'editDrinkName')?.value || '';
+    if (!input || !dropdown || document.activeElement !== input) return;
+    const suggestions=matchingFlavorSuggestions(name,input.value.trim());
+    if (!suggestions.length) return;
+    dropdown.innerHTML='<div class="flavor-suggestions-heading">PREVIOUS FLAVORS</div>'+suggestions.map(({name,count},i)=>`<button type="button" role="option" data-flavor-index="${i}"><span>${escapeHTML(name)}</span><small>${count} logged</small></button>`).join('');
+    dropdown.querySelectorAll('[data-flavor-index]').forEach((button,i)=>button.addEventListener('click',()=>{
+        input.value=suggestions[i].name;hideFlavorSuggestions();input.focus();
+    }));
+    dropdown.classList.remove('hidden');input.setAttribute('aria-expanded','true');
+}
+document.addEventListener('pointerdown', event=>{
+    if (!event.target.closest('.flavor-field')) hideFlavorSuggestions();
+    if (!event.target.closest('.drink-picker')) hideDrinkSuggestions();
+});
+
 function renderMyDrinks() {
     const container =
         document.getElementById("myDrinksList");
@@ -5052,7 +5239,7 @@ function renderMyDrinks() {
                 return `
                     <div class="my-drink-card">
 
-                        <div class="my-drink-bolt"></div>
+                        <div class="my-drink-bolt v15-custom-can" style="--drink-tint:${V15_COLORS[drink.color] || (/alani/i.test(drink.name) ? V15_COLORS.purple : V15_COLORS.blue)}"><span class="v142-can-illustration" aria-hidden="true"><span class="v142-can-stripe"></span></span></div>
 
                         <div class="my-drink-info">
 
@@ -5061,9 +5248,8 @@ function renderMyDrinks() {
                             </strong>
 
                             <span>
-                                ${Number(drink.amount)} mg
-                                ·
-                                ${usageText}
+                                ${Number(drink.amount)} mg${drink.ounces ? ` · ${drink.ounces} oz` : ''}
+                                · ${usageText}
                             </span>
 
                         </div>
@@ -5121,7 +5307,7 @@ function renderMyDrinks() {
                             </div>
 
                         </div>
-
+                        ${renderFlavorBreakdown(drink)}
                     </div>
                 `;
             })
@@ -5432,6 +5618,8 @@ function openEditSavedDrink(id) {
     document.getElementById(
         "editSavedDrinkAmount"
     ).value = drink.amount;
+    document.getElementById('editSavedDrinkOunces').value=drink.ounces??'';
+    chooseDrinkColor('editSavedDrink',Object.hasOwn(V15_COLORS,drink.color)?drink.color:'blue');
 
     document
         .getElementById(
@@ -5535,8 +5723,11 @@ if (nameChanged) {
         });
 }
 
+const ounces=v15Ounces('editSavedDrink');if(ounces===false)return;
 drink.name = name;
 drink.amount = amount;
+drink.ounces=ounces;
+drink.color=v15SelectedColors.editSavedDrink;
 
 saveData();
 
@@ -5569,9 +5760,8 @@ function logSavedDrink(id) {
             drink.name;
     }
 
-    selectAmount(
-        drink.amount
-    );
+    selectAmount(drink.amount);
+    v15FillLoggerFromDrink(drink);
 }
 
 /* =========================
@@ -6010,6 +6200,7 @@ function selectDrinkSuggestion(
     }
 
     selectAmount(amount);
+    v15FillLoggerFromDrink(v15SavedByName(input?.value||''));
 
     if (dropdown) {
         dropdown.classList.add("hidden");
@@ -6042,6 +6233,28 @@ function openMyDrinksFromPicker() {
    UPDATE EVERYTHING
 ========================= */
 
+function updateHomeExtras() {
+    const month=document.getElementById('homeMonthlyTotal');
+    if(month){const prefix=dateKey(appDate()).slice(0,7);month.textContent=Object.entries(data.days||{}).filter(([day])=>day.startsWith(prefix)).reduce((sum,[,v])=>sum+Number(v.caffeine||0),0).toLocaleString();}
+    const avg = document.getElementById("homeSevenDayAverage");
+    if (avg) avg.textContent = Math.round(sevenDayTotal() / 7);
+    const name = document.getElementById("homeLastDrink");
+    const detail = document.getElementById("homeLastDrinkDetail");
+    if (!name || !detail) return;
+    const logs = [];
+    Object.entries(data.days || {}).forEach(([day, value]) => {
+        (value.entries || []).forEach((entry, i) => logs.push({day, entry, i}));
+    });
+    logs.sort((a,b) => b.day.localeCompare(a.day) || b.i - a.i);
+    if (logs.length) {
+        name.textContent = logs[0].entry.name || "Caffeine";
+        detail.textContent = `${logs[0].entry.amount || 0} mg · ${logs[0].day}`;
+    } else {
+        name.textContent = "—";
+        detail.textContent = "No drinks yet";
+    }
+}
+
 function updateApp() {
     normalizeData();
 
@@ -6056,6 +6269,7 @@ function updateApp() {
     updateEncouragement();
 
     renderChart();
+    updateHomeExtras();
 
     renderHistory();
 
@@ -6117,6 +6331,10 @@ document.addEventListener(
         setupSystemAppearanceListener();
 
         updateApp();
+
+        // Restored open dropdowns need a first render after initialization.
+        // Home is shown first, so render when History is opened instead.
+        refreshVisibleHistoryTrend();
 
         setupDevMode();
 
