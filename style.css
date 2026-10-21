@@ -3857,3 +3857,44 @@ body.dark-mode .v15-time-field{background:linear-gradient(140deg,#294459,#263746
     text-align: center !important;
   }
 }
+/* Center the past-date logging section */
+input[type="date"] {
+  display: block;
+  box-sizing: border-box;
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  text-align-last: center;
+}
+
+/* iPhone Safari date text alignment */
+input[type="date"]::-webkit-date-and-time-value {
+  text-align: center;
+  min-height: 1lh;
+}
+/* FIX: Center the entire past-date logging card */
+
+#historyPage .past-log-button {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    width: 100%;
+}
+
+#historyPage .past-log-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    gap: 4px;
+    grid-column: auto;
+    grid-row: auto;
+}
+
+#historyPage .past-log-button .past-date-row {
+    width: 100% !important;
+    align-self: center;
+    grid-column: auto;
+}
